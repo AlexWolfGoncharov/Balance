@@ -1,0 +1,36 @@
+<!DOCTYPE hibernate-configuration PUBLIC 
+    "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+
+	<session-factory>
+		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="connection.url">jdbc:mysql://termometr.c7n1ldlwweuw.us-west-2.rds.amazonaws.com:3306/Balance</property>
+		<property name="connection.username">AlexWolf</property>
+		<property name="connection.password">alex121189</property>
+		<!--<property name="hibernate.hbm2ddl.auto">update</property>-->
+		<!---->
+		<!--<property name="cache.provider_class">org.hibernate.cache.HashtableCacheProvider</property>-->
+		<property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+		<!--<property name="transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>-->
+		<property name="current_session_context_class">thread</property>
+		<property name="hibernate.show_sql">false</property>
+		<!--<property name="format_sql">true</property>-->
+
+		<property name="connection.pool_size">10</property>
+		<property name="connection.autocommit">true</property>
+		<mapping class="com.github.alexwolfgoncharov.balance.structure.ContrAgents"/>
+		<mapping class="com.github.alexwolfgoncharov.balance.structure.Contracts"/>
+		<mapping class="com.github.alexwolfgoncharov.balance.structure.Departments"/>
+		<mapping class="com.github.alexwolfgoncharov.balance.structure.ReceiptOperationsContracts"/>
+		<mapping class="com.github.alexwolfgoncharov.balance.structure.ReceiptOperationsDepartments"/>
+		<mapping class="com.github.alexwolfgoncharov.balance.security.UserRoles"/>
+		<mapping class="com.github.alexwolfgoncharov.balance.security.User"/>
+
+		<!--<mapping class="com.github.alexwolfgoncharov.termdata.interfaces.LoginBaseidEntity"/>-->
+
+
+	</session-factory>
+
+</hibernate-configuration>
