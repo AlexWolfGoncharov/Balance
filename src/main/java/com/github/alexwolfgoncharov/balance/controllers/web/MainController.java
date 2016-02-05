@@ -241,6 +241,7 @@ public class MainController {
         map.put("save", "../contract");
 
         return "contracts";
+
     }
 
 

@@ -44,9 +44,23 @@
                     </sec:authorize>
 
 
-                    <li id="view"><a id="view_a" href="<c:url value="/view" />"><i class="material-icons" style="vertical-align:middle;font-size:3em;">view_list</i>  Просмотр </a></li>
 
-                    <li><a  id="contracts"  href="<c:url value="/contracts" />"><i style="vertical-align:middle; font-size: 3em;" class="material-icons">work</i>Контракты</a></li>
+                    <li> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="material-icons" style="vertical-align:middle;font-size:3em;">view_list</i> Просмотр <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li role="separator" class="divider"></li>
+                            <li><a  id="users1"  href="<c:url value="/allopercontract" />"><i style="vertical-align:middle; font-size: 3em;" class="material-icons">work</i>Поступления по Контрактам</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a  id="dept"  href="<c:url value="/alloperdept" />"><i style="vertical-align:middle; font-size: 3em;" class="material-icons">business</i>Поступления по Департаментаментам</a></li>
+                            <li role="separator" class="divider"></li>
+
+
+
+
+                        </ul>
+                    </li>
+
+
+
 
 
                 </sec:authorize>
@@ -63,7 +77,7 @@
                             <li role="separator" class="divider"></li>
                             <li><a  id="contrAgents"  href="<c:url value="/contragents" />"><i style="vertical-align:middle; font-size: 3em;" class="material-icons">contacts</i>Котрагенты</a></li>
                             <li role="separator" class="divider"></li>
-
+                            <li><a  id="contracts"  href="<c:url value="/contracts" />"><i style="vertical-align:middle; font-size: 3em;" class="material-icons">work</i>Контракты</a></li>
 
 
 

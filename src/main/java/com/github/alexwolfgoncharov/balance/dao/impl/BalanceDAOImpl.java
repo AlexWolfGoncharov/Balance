@@ -3,6 +3,8 @@ package com.github.alexwolfgoncharov.balance.dao.impl;
 import com.github.alexwolfgoncharov.balance.dao.BalanceDAO;
 import com.github.alexwolfgoncharov.balance.structure.Balance;
 import com.github.alexwolfgoncharov.balance.util.HibernateMyUtil;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -64,7 +66,8 @@ public class BalanceDAOImpl implements BalanceDAO {
                     .beginTransaction();
 
             contractsList = HibernateMyUtil.getSessionFactory().getCurrentSession()
-                    .createCriteria(o.getClass()).list();
+                    .createCriteria(o.getClass()).addOrder(Order.asc("id"))
+                    .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
             HibernateMyUtil.getSessionFactory().getCurrentSession()
                     .getTransaction().commit();
         } catch (Exception e) {

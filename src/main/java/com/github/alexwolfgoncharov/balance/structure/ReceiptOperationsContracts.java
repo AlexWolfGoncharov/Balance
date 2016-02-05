@@ -150,19 +150,22 @@ public class ReceiptOperationsContracts {
 
     public String receiptOperationsDepartmentListToString(){
 
-        String rez = "[";
-        int coun = 1;
-        for (ReceiptOperationsDepartments dep : this.receiptOperationsDepartmentList){
-            rez += "{";
-            rez += dep.toString();
-            rez += "}";
-            if (coun != this.receiptOperationsDepartmentList.size())
-                rez += ",";
+        String rez = "0";
+        if (this.receiptOperationsDepartmentList != null) {
+            rez = "[";
+            int coun = 1;
+            for (ReceiptOperationsDepartments dep : this.receiptOperationsDepartmentList) {
+                rez += "{";
+                rez += dep.toString();
+                rez += "}";
+                if (coun != this.receiptOperationsDepartmentList.size())
+                    rez += ",";
 
-            coun++;
+                coun++;
 
+            }
+            rez += "]";
         }
-        rez += "]";
 
         return rez;
     }
