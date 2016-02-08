@@ -5,6 +5,7 @@ import com.github.alexwolfgoncharov.balance.structure.Contracts;
 import com.github.alexwolfgoncharov.balance.structure.ReceiptOperationsContracts;
 import com.github.alexwolfgoncharov.balance.util.HibernateMyUtil;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import java.sql.Timestamp;
@@ -136,6 +137,44 @@ public class ReiceptOperContractsDAOImpl implements ReceiptOperContractsDAO {
             contractsList = HibernateMyUtil.getSessionFactory().getCurrentSession()
                     .createCriteria(ReceiptOperationsContracts.class)
                     .add(Restrictions.eq("contractId", contract))
+                    .addOrder(Order.asc("id"))
+                    .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
+            HibernateMyUtil.getSessionFactory().getCurrentSession()
+                    .getTransaction().commit();
+        } catch (Exception e) {
+            HibernateMyUtil.getSessionFactory().getCurrentSession()
+                    .getTransaction().rollback();
+            log.severe(e.getMessage());
+        }
+
+        return contractsList;
+    }
+
+    @Override
+    public List<ReceiptOperationsContracts> getAllForDate(Date start, Date end) {
+
+
+
+
+        if (end == null) {
+            java.util.Date e =  new java.util.Date();
+                    e.setDate(1);
+            end = new java.util.Date(e.getTime());
+        }
+
+        java.sql.Date startSql = new java.sql.Date(start.getTime());
+        java.sql.Date endSql = new java.sql.Date(end.getTime());
+
+        List<ReceiptOperationsContracts> contractsList = null;
+        try {
+
+            HibernateMyUtil.getSessionFactory().getCurrentSession()
+                    .beginTransaction();
+
+            contractsList = HibernateMyUtil.getSessionFactory().getCurrentSession()
+                    .createCriteria(ReceiptOperationsContracts.class)
+                    .add(Restrictions.between("time", startSql, endSql))
+                    .addOrder(Order.asc("time"))
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
             HibernateMyUtil.getSessionFactory().getCurrentSession()
                     .getTransaction().commit();

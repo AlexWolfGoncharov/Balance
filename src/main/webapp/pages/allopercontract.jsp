@@ -40,23 +40,6 @@
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script> -->
 
-	<script>
-
-
-		function setNdsSum() {
-
-
-
-			if(document.getElementById('ndcCheck').checked){
-				document.getElementById('ndcForm').disabled = false;
-				document.getElementById('ndcForm').value = (document.getElementById('summa').value * 0.2);} else {
-
-				document.getElementById('ndcForm').disabled = true;
-				document.getElementById('ndcForm').value = "";
-			}
-		}
-
-	</script>
 
 </head>
 <body>
@@ -73,114 +56,162 @@
 <div class="container">
 
 
-	<h2>Добавить послупление по Контракту</h2>
-
-	<form:form method="post" action="addbalance" commandName="operContract" class="form-horizontal">
-
-
-		<form:hidden path="id"/>
-
-
-		<div class="form-group">
-
-			<form:label path="contractId" class="col-sm-2 control-label">
-				Контракт:
-			</form:label>
-			<div class="col-sm-10">
-
-
-				<form:select path="contractId.id" class="form-control">
-					<form:option value="0" label="Выберите Контракт"/>
 
 
 
-					<!-- <form:options items="${contractList}"/> -->
 
-					<c:forEach items="${contractList}" var="contragent" varStatus="myIndex">
-						<form:option value="${contragent.id}" label="№${contragent.contractNumber} | ${contragent.startDate} | ${contragent.description}" />
-					</c:forEach>
+	<div>
+
+		<!-- Nav tabs -->
+		<ul class="nav nav-tabs" role="tablist">
+
+			<li role="presentation"  class="active">
+				<a href="#date" aria-controls="date" role="tab" data-toggle="tab" id="date-tab">Выбор за дату</a></li>
+			<li role="presentation">
+				<a href="#contract" aria-controls="contract" role="tab" data-toggle="tab" id="contract-tab">Выбор по контракту</a></li>
+			<li role="presentation">
+				<a href="#all" aria-controls="all" role="tab" data-toggle="tab" id="all-tab">Отображение всех</a></li>
+
+		</ul>
+
+		<!-- Tab panes -->
+		<div class="tab-content">
+			<div role="tabpanel" class="tab-pane active" id="date" aria-labelledby="date-tab">
+
+				<h2>Выбор записей за период </h2>
 
 
-					<!-- <form:options items="${contragentsList}"/> -->
-				</form:select>
+				<form:form method="get" action="allopercontract"  class="form-inline">
+
+
+					<div class="form-group">
+						<label for="datestart">с </label>
+						<input name="datestart" class="form-control" type="datetime" id="datestart" placeholder="дд.мм.гггг"/>
+					</div>
+					<div class="form-group">
+						<label for="dateend">по </label>
+						<input name="dateend" class="form-control" type="datetime" id="dateend" placeholder="дд.мм.гггг"/>
+					</div>
+					<button type="submit" class="btn btn-default">Поиск</button>
+
+
+				</form:form>
+
+
+
 			</div>
+			<div role="tabpanel" class="tab-pane" id="contract" aria-labelledby="contract-tab">
 
+
+				<h2>Выбор записей по контракту </h2>
+
+				<form:form method="get" action="allopercontract"  class="form-inline">
+
+					<select name="contractId" class="form-control">
+
+						<c:forEach items="${contraсtsList}" var="contragent" varStatus="myIndex">
+							<option value="${contragent.id}" label="№${contragent.contractNumber} | ${contragent.startDate} | ${contragent.description}" />
+						</c:forEach>
+
+
+					</select>
+					<button type="submit" class="btn btn-default">Поиск</button>
+				</form:form>
+
+
+			</div>
+			<div role="tabpanel" class="tab-pane" id="all" aria-labelledby="all-tab">
+
+
+				<h2>Отображение всех записей</h2>
+
+				<form:form method="get" action="allopercontract"  class="form-inline">
+
+					<input hidden="true" name="all" value="1"/>
+
+					<button type="submit" class="btn btn-default">Поиск</button>
+				</form:form>
+
+
+
+
+			</div>
 
 		</div>
 
-		<div class="form-group">
-			<form:label path="description" class="col-sm-2 control-label">
-				Описание:
-			</form:label>
-			<div class="col-sm-10">
-				<form:textarea path="description" class="form-control"/>
-			</div>
+	</div>
+
+
+
+
+
+
+	<c:if test="${!empty operContractList}">
+		<div class="container">
+			<h2>Список операций</h2>
+			<c:if test="${!empty type}">
+				<h3>${type}</h3>
+			</c:if>
+
+
+			<table class="table table-view">
+				<tr>
+					<th>#</th>
+					<th>Дата время</th>
+					<th>Контракт</th>
+					<th>Сумма, грн</th>
+					<th>НДС, грн</th>
+					<th>Описание</th>
+					<th>&nbsp;</th>
+
+				</tr>
+				<c:forEach items="${operContractList}" var="operContract" varStatus="myIndex">
+					<tr>
+						<td>${myIndex.index + 1}</td>
+						<td>${operContract.time}</td>
+						<td>${operContract.contractId.contractNumber}</td>
+						<td>${operContract.summa}</td>
+						<td>${operContract.ndc}</td>
+						<td>${operContract.description}</td>
+						<td>
+							<div class="btn-group" role="group btn-group-sm" aria-label="Operations">
+								<a href="./view/opercontract/${operContract.id}" class="btn btn-primary"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span></a>
+								<a href="./edit/opercontract/${operContract.id}" class="btn btn-warning"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></a>
+								<a href="./delete/opercontract/${operContract.id}" class="btn btn-danger"><span class="glyphicon glyphicon-trash" aria-hidden="true"></a>
+							</div>
+						</td>
+					</tr>
+				</c:forEach>
+			</table>
+
+
+	</c:if>
 
 		</div>
 
-
-		<div class="form-group">
-
-			<form:label path="time" class="col-sm-2 control-label">
-				Дата старта:
-			</form:label>
-			<div class="col-sm-10">
-				<form:input path="time" class="form-control" type="datetime" id="datetime"/>
-			</div>
-
-
-		</div>
-
-
-
-		<div class="form-group">
-
-			<form:label path="summa" class="col-sm-2 control-label">
-				Сумма:
-			</form:label>
-			<div class="col-sm-10">
-				<form:input path="summa"  id="summa" class="form-control"/>
-			</div>
-
-
-		</div>
-
-		<div class="form-group">
-
-			<form:label path="ndc" class="col-sm-2 control-label">
-				<div class="checkbox"><label><input type="checkbox" class="checkbox" id="ndcCheck" onclick="setNdsSum()"><strong>НДС:</strong></label></div>
-			</form:label>
-
-			<div class="col-sm-10">
-				<form:input path="ndc" id = "ndcForm" class="form-control" disabled="true"/>
-			</div>
-
-
-		</div>
-
-
-
-
-
-		<div class="form-group">
-			<div class="col-sm-offset-2 col-sm-10">
-				<button type="submit" class="btn btn-success">Save</button>
-			</div>
-		</div>
-
-
-	</form:form>
 </div>
 
 
-<script type="text/javascript" src="<c:url value="/pages/js/bootstrap-datetimepicker.min.js" />" charset="UTF-8"></script>
-<script type="text/javascript" src="<c:url value="/pages/js/bootstrap-datetimepicker.ru.js" />" charset="UTF-8"></script>
-<script type="text/javascript">
+	<script type="text/javascript" src="<c:url value="/pages/js/bootstrap-datetimepicker.min.js" />" charset="UTF-8"></script>
+	<script type="text/javascript" src="<c:url value="/pages/js/bootstrap-datetimepicker.ru.js" />" charset="UTF-8"></script>
+	<script type="text/javascript">
+		$('#${tab}-tab').tab('show')
 
 
-	$("#datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii:ss', autoclose: true,
-		todayBtn: true, keyboardNavigation: true, language: 'ru'});
-</script>
+		$("#datestart").datetimepicker({format: 'dd.mm.yyyy', autoclose: true,
+			todayBtn: true, keyboardNavigation: true, language: 'ru', minView: 2});
+
+
+		$("#dateend").datetimepicker({format: 'dd.mm.yyyy', autoclose: true,
+			todayBtn: true, keyboardNavigation: true, language: 'ru', minView: 2});
+
+
+
+
+	</script>
+
+
+
 
 </body>
 </html>

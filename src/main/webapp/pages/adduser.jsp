@@ -29,7 +29,26 @@
 	<!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script> -->
+<script>
 
+	function validetePass(){
+
+		var pass1 = document.getElementById("pass1").value;
+		var pass2 =document.getElementById("pass2").value;
+
+		if (pass1 !== pass2){
+			document.getElementById("wrong").textContent = "Введенные пароли не совпадают."
+
+		} else {
+			document.getElementById("wrong").textContent = ""
+		}
+
+
+
+
+	}
+
+</script>
 </head>
 <body>
 <%@include file="header.jsp" %>
@@ -68,24 +87,40 @@
 	<form:form method="post" action="addusers" commandName="user" class="form-horizontal">
 		<div class="form-group">
 			<form:label path="login" class="col-sm-2 control-label">
-				Login:
+				Логин:
 			</form:label>
 			<div class="col-sm-10">
-				<form:input path="login" class="form-control"/>
+				<form:input path="login" class="form-control" autocomplete="off"/>
 			</div>
 
 		</div>
+
 		<div class="form-group">
 
 			<form:label path="password" type="password" class="col-sm-2 control-label">
-				Password:
+				Пароль:
 			</form:label>
 			<div class="col-sm-10">
-				<form:password path="password" class="form-control"/>
+				<form:password path="password" id="pass1" class="form-control" autocomplete="off"/>
 			</div>
 
 
 		</div>
+
+
+		<div class="form-group">
+			<label for="pass2" class="col-sm-2 control-label">Повторите Пароль:</label>
+			<div class="col-sm-10">
+				<input type="password" class="form-control" id="pass2" autocomplete="off" onblur="validetePass()"/>
+			</div>
+
+		</div>
+
+<div>
+	<a id="wrong" class="text-danger"></a>
+</div>
+
+
 
 		<div class="form-group">
 
@@ -106,7 +141,7 @@
 				Отчество:
 			</form:label>
 			<div class="col-sm-10">
-				<form:input path="lastName" class="form-control"/>
+				<form:input path="middleName" class="form-control"/>
 			</div>
 
 		</div>

@@ -6,7 +6,7 @@
 
 <sec:authentication var="curentuser" property="principal" />
 
-<nav class ="navbar navbar-fixed-top navbar-default" >
+<nav class ="navbar navbar-inverse navbar-fixed-top navbar-default" >
     <!-- <div class="header" style="heigth:75px"> -->
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -17,7 +17,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="./" >
+            <a class="navbar-brand" href="/"  style="color: #4cae4c">
                 <span style= "font-size: 1.7em; vertical-align:middle;"><i class="material-icons" style="vertical-align:middle; font-size:1.2em;">attach_money</i>BalanceSystem </span>
             </a>
 

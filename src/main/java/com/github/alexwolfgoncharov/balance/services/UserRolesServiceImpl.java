@@ -16,7 +16,7 @@ public class UserRolesServiceImpl implements UserRolesService {
             .getName());
 
     @Autowired
-    private UserRolesDAO rolesDAO = new UserRolesDAOImpl();
+    private static UserRolesDAO rolesDAO = new UserRolesDAOImpl();
     @Override
     public void add(UserRoles roles) {
         rolesDAO.add(roles);

@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
 			.getName());
 
 //	@Autowired
-	private UserDAO userDAO = new UserDAOImpl();
+	private static UserDAO userDAO = new UserDAOImpl();
 	
 	 @Transactional
     public User getUser(String login) {

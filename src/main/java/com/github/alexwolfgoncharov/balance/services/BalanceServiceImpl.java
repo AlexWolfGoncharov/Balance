@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class BalanceServiceImpl implements  BalanceService {
 
-    private BalanceDAO balanceDAO = new BalanceDAOImpl();
+    private static BalanceDAO balanceDAO = new BalanceDAOImpl();
 
     @Override
     public void add(Balance contract) {

@@ -138,8 +138,8 @@ public class ReceiptOperationsContracts {
     public String toString() {
         return "ReceiptOperationsContracts{" +
                 "id=" + id +
-                ", time=" + time +
-                ", contractId=" + contractId +
+                ", time=" + time.toLocaleString() +
+                ", contractId=" + contractId.getId() +
                 ", summa=" + summa +
                 ", ndc=" + ndc +
                 ", description='" + description + '\'' +

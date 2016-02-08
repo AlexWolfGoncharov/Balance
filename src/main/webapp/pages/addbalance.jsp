@@ -122,7 +122,7 @@
 		<div class="form-group">
 
 			<form:label path="time" class="col-sm-2 control-label">
-				Дата старта:
+				Дата:
 			</form:label>
 			<div class="col-sm-10">
 				<form:input path="time" class="form-control" type="datetime" id="datetime"/>

@@ -3,6 +3,7 @@ package com.github.alexwolfgoncharov.balance.dao;
 import com.github.alexwolfgoncharov.balance.structure.Contracts;
 import com.github.alexwolfgoncharov.balance.structure.ReceiptOperationsContracts;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -15,6 +16,7 @@ public interface ReceiptOperContractsDAO {
     void modify(ReceiptOperationsContracts contract);
     void delete(ReceiptOperationsContracts contract);
     List<ReceiptOperationsContracts> getAllByContract(Contracts contract);
+    public List<ReceiptOperationsContracts> getAllForDate(Date start, Date end);
 
 
 

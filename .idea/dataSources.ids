@@ -15,7 +15,9 @@
       <table id="4" parent="1" name="receipt_operations_contracts">
         <comment>таблица поступлений по договорам</comment>
       </table>
-      <table id="5" parent="1" name="receipt_operations_departments"/>
+      <table id="5" parent="1" name="receipt_operations_departments">
+        <comment>таблица поступлений по договорам в разрезе департаментов</comment>
+      </table>
       <table id="6" parent="1" name="departments"/>
       <table id="7" parent="1" name="schema_migrations"/>
       <table id="8" parent="1" name="app_users_roles"/>

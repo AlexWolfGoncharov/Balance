@@ -7,6 +7,7 @@ import com.github.alexwolfgoncharov.balance.structure.ReceiptOperationsContracts
 import com.github.alexwolfgoncharov.balance.structure.ReceiptOperationsDepartments;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,7 +17,7 @@ import java.util.List;
 public class ReceiptOperContractServiceImpl implements ReceiptOperContractService {
 
 //    @Autowired
-    private ReceiptOperContractsDAO receiptOperContractsDAO =  new ReiceptOperContractsDAOImpl();
+    private static ReceiptOperContractsDAO receiptOperContractsDAO =  new ReiceptOperContractsDAOImpl();
 
     public void add(ReceiptOperationsContracts contract) {
         receiptOperContractsDAO.add(contract);
@@ -52,5 +53,11 @@ public class ReceiptOperContractServiceImpl implements ReceiptOperContractServic
 
     public List<ReceiptOperationsContracts> getAllByContract(Contracts contract) {
         return receiptOperContractsDAO.getAllByContract(contract);
+    }
+
+    @Override
+    public List<ReceiptOperationsContracts> getAllForDate(Date start, Date end) {
+
+        return receiptOperContractsDAO.getAllForDate(start, end);
     }
 }

@@ -41,16 +41,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // указываем правила запросов
                 // по которым будет определятся доступ к ресурсам и остальным данным
                 .authorizeRequests()
-                .antMatchers("/edit").access("hasRole('ROLE_ADMIN')")
-                .antMatchers("/delete").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/edit/**").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/delete/**").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/addusers").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/adddep").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/addContagent").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/addContract").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/addoperdep").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/view/**").authenticated()
+                .antMatchers("/view/opercontract/").authenticated()
                 .antMatchers("/contracts").authenticated()
                 .antMatchers("/contragents").authenticated()
                 .antMatchers("/deplist").authenticated()
                 .antMatchers("/userlist").authenticated()
+                .antMatchers("/allopercontract").authenticated()
+                .antMatchers("/alloperdept").authenticated()
+
 
                 .antMatchers("/resources/**", "/**","/receiptcontract/**").permitAll()
                 .anyRequest().permitAll()

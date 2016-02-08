@@ -15,7 +15,7 @@ import java.util.List;
 @Service
 public class ReceiptOperDeptServiceImpl implements ReceiptOperDeptService{
 //    @Autowired
-    private ReceiptOperDeptDAO receiptOperDeptDAO = new ReiceptOperDeptDAOImpl();
+    private static ReceiptOperDeptDAO receiptOperDeptDAO = new ReiceptOperDeptDAOImpl();
 
     public void add(ReceiptOperationsDepartments contract) {
         receiptOperDeptDAO.add(contract);

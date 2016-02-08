@@ -15,7 +15,7 @@ import java.util.List;
 public class ContrAgentsServiceImpl  implements  ContrAgentsService{
 
 //    @Autowired
-    private ContrAgentsDAO contrAgentsDAO = new ContrAgentsDAOImpl();
+    private static ContrAgentsDAO contrAgentsDAO = new ContrAgentsDAOImpl();
 
     public void add(ContrAgents contract) {
         contrAgentsDAO.add(contract);

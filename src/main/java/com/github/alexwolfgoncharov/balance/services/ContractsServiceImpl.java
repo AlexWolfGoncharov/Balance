@@ -15,7 +15,7 @@ import java.util.List;
 public class ContractsServiceImpl implements  ContractsService {
 
 //    @Autowired
-    private ContractsDAO contractsDAO = new ContractDAOImpl();
+    private static ContractsDAO contractsDAO = new ContractDAOImpl();
 
     public void add(Contracts contract) {
 
