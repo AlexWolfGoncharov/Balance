@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +42,17 @@ public class ReceiptControler {
     private static final Logger log = Logger.getLogger(MainController.class
             .getName());
 
+
+
+
+
+
+//  ===============================
+//    Operation for Contracts
+//  ================================
+
+
+
     @RequestMapping(value = "/addbalance", method = RequestMethod.POST)
     public String addContractOperPOST(@ModelAttribute("opercontarct") ReceiptOperationsContracts operationsContracts,
                               BindingResult result, Map<String, Object> map) {
@@ -49,7 +61,17 @@ public class ReceiptControler {
 
 //        log.info(operationsContracts.getTime().toString());
 
-        ReceiptOperationsContracts newOperContract = new ReceiptOperationsContracts();
+        ReceiptOperationsContracts newOperContract = null;
+
+        if(operationsContracts.getId() != 0) {
+            newOperContract = receiptOperContractService.getById(operationsContracts.getId());
+
+        } else {
+
+            newOperContract = new ReceiptOperationsContracts();
+
+        }
+
         newOperContract.setContractId(currentContr);
         newOperContract.setSumma(operationsContracts.getSumma());
         newOperContract.setNdc(operationsContracts.getNdc());
@@ -65,10 +87,10 @@ public class ReceiptControler {
 //            return "redirect:/addbalance";
 //        }
 
-        receiptOperContractService.add(newOperContract);
+      long id =   receiptOperContractService.add(newOperContract);
 
 
-        return "redirect:/addbalance";
+        return "redirect:/view/opercontract/"+id;
 //        return "redirect:/allopercontract";
     }
 
@@ -83,7 +105,7 @@ public class ReceiptControler {
         ReceiptOperationsContracts receiptOperationsContracts =  new ReceiptOperationsContracts();
         map.put("operContract", receiptOperationsContracts);
 
-        return "/addbalance";
+        return "addbalance";
     }
 
 
@@ -95,11 +117,8 @@ public class ReceiptControler {
 
         Map<String, String[]> parametrs =  requestBody.getParameterMap();
 
-//        @RequestParam("datestart")Date start, @RequestParam("dateend")Date end,
-//        @RequestParam("contractId") int contractId, @RequestParam("contragent") int contragentId
-
-
-        // 1 - return all list
+//        typeOfReturn:
+//        1 - return all list
 //        2 - return  list between start and end
 //        3 - return  all list for contract
         int typeOfReturn = 0;
@@ -129,36 +148,22 @@ public class ReceiptControler {
             Date eND = new Date(end.getTime()+ (1000 * 60 * 60 * 24));
 
 
-
-
-
-
-
-
             if (parametrs.containsKey("dateend")){
 
 
                 try {
 
                     eND = format.parse(parametrs.get("dateend")[0]);
+                    eND = new Date(eND.getTime()+ (1000 * 60 * 60 * 24));
                 } catch (ParseException e) {
                     log.warning(e.getMessage());
                 }
 
 
 
-
-
             }
 
-//            eND.setDate(1);
             end = new Date(eND.getTime());
-
-
-
-
-
-
 
         }
 
@@ -168,36 +173,58 @@ public class ReceiptControler {
         }
 
 
+
+        List<ReceiptOperationsContracts> receiptOperationsContractsList = new ArrayList<>();
+
         switch (typeOfReturn){
             case 1:
-                map.put("operContractList", receiptOperContractService.getAll());
+                receiptOperationsContractsList = receiptOperContractService.getAll();
+
                 map.put("tab","all");
                 map.put("type", "Все записи");
                 break;
             case 2:
-                map.put("operContractList", receiptOperContractService.getAllForDate(start, end));
+                receiptOperationsContractsList = receiptOperContractService.getAllForDate(start, end);
                 map.put("type", "За период с " + format.format(start).toString()
                         + " по " + format.format(end).toString());
                 map.put("tab","date");
                 break;
             case 3:
-                map.put("operContractList", receiptOperContractService.getAllByContract(contracts));
-                map.put("type", "Для контрата №" + contracts.getContractNumber() + " от " + contracts.getStartDate()
-                        + " контрагента: " + contracts.getContrAgentId().getName());
+                receiptOperationsContractsList =  receiptOperContractService.getAllByContract(contracts);
+                map.put("type", "Для контракта №" + contracts.getContractNumber() + " от " + contracts.getStartDate()
+                        + "<br/>Контрагент: " + contracts.getContrAgentId().getName());
                 map.put("tab","contract");
                 break;
 
         }
 
 
+        Double summ = 0D;
 
+        Double ndc = 0D;
+
+        for (ReceiptOperationsContracts operationsContracts : receiptOperationsContractsList){
+
+
+            summ += operationsContracts.getSumma();
+
+            if (operationsContracts.getNdc() != null)
+                ndc += operationsContracts.getNdc();
+
+        }
+
+        map.put("operContractList", receiptOperationsContractsList);
+        map.put("summa", summ.floatValue());
+        map.put("ndc", ndc.floatValue());
         map.put("contraсtsList", balanceService.getAll(new Contracts()));
-//        map.put("contragentsList", balanceService.getAll(new ContrAgents()));
 
         if (!map.containsKey("tab"))
             map.put("tab","date");
         return "allopercontract";
     }
+
+
+
 
 
     @RequestMapping("/view/opercontract/{id}")
@@ -224,11 +251,68 @@ public class ReceiptControler {
 
 
 
+
+       @RequestMapping("/edit/opercontract/{id}")
+    public String editContractOperGET(@PathVariable("id") long id,
+                                      Map<String, Object> map,
+                                      HttpServletRequest  requestBody) {
+
+
+        List<Balance> balanceList = balanceService.getAll(new  Contracts());
+        map.put("contractList", balanceList);
+
+        ReceiptOperationsContracts operationsContracts = receiptOperContractService.getById(id);
+        map.put("operContract", operationsContracts);
+
+           if (requestBody.getParameterMap().containsKey("operdep")
+                   && !requestBody.getParameterMap().get("operdep").equals("")){
+
+               ReceiptOperationsDepartments receiptOperationsDepartments =
+                       receiptOperDeptService.getById(Long.parseLong(requestBody.getParameterMap().get("operdep")[0]));
+
+
+
+
+               map.put("operdep", receiptOperationsDepartments);
+           }
+
+        return "addbalance";
+    }
+
+
+    @RequestMapping("/delete/opercontract/{id}")
+    public String deleteContractOperGET(@PathVariable("id") long id,
+                                        Map<String, Object> map,
+                                        HttpServletRequest  requestBody) {
+
+
+
+        ReceiptOperationsContracts operationsContracts = receiptOperContractService.getById(id);
+
+        List<ReceiptOperationsDepartments> operationsDepartmentses = operationsContracts.getReceiptOperationsDepartmentList();
+
+        receiptOperContractService.delete(operationsContracts);
+        log.info(requestBody.getHeader("referer"));
+
+
+        return "redirect:"+requestBody.getHeader("referer");
+    }
+
+
+
+
+
+
+//  ===============================
+//    Operation for Departaments
+//  ================================
+
     @RequestMapping("/addoperdep")
     public String addOperDep(@ModelAttribute("operdep")ReceiptOperationsDepartments operationsDepartments,
                              BindingResult result, Map<String, Object> map) {
-
-        receiptOperDeptService.add(operationsDepartments);
+//        Исключаем доваление пустых записей с незаполненной суммой
+        if (operationsDepartments.getSumma() != 0)
+                 receiptOperDeptService.add(operationsDepartments);
 
         ReceiptOperationsContracts operationsContracts = receiptOperContractService.getById(operationsDepartments.getReceptOpContrId());
 
@@ -252,8 +336,6 @@ public class ReceiptControler {
 
 
 
-
-
     @RequestMapping("/delete/operdep/{id}")
     public String deleteContract(@PathVariable("id") long id) {
 
@@ -265,51 +347,166 @@ public class ReceiptControler {
 
         return "redirect:/view/opercontract/"+fordel.getReceptOpContrId();
     }
-//
-//    @RequestMapping(value = "/edit/contract", method = RequestMethod.POST)
-//
-//    public String editContractPOST(@ModelAttribute("contract") Contracts contact, BindingResult result) {
-//
-//
-//        ContrAgents contrAgents = (ContrAgents) balanceService.getById(contact.getContrAgentId().getId(),new ContrAgents());
-//        contact.setContrAgentId(contrAgents);
-//
-//
-//
-//
-//        Contracts newContr = (Contracts) balanceService.getById(contact.getId(), new Contracts());
-//        newContr.setContractNumber(contact.getContractNumber());
-//        newContr.setDescription(contact.getDescription());
-//        newContr.setSumm(contact.getSumm());
-//        newContr.setContrAgentId(contrAgents);
-//        newContr.setStartDate(contact.getStartDate());
-//
-//
-//
-////        ContrAgents contrAgent = (ContrAgents) balanceService.getById(contrAgentId, new ContrAgents());
-////        contact.setContrAgentId(contrAgent);
-//
-//        log.info(contact.toString());
-//
-//        balanceService.modify(newContr);
-//
-//
-//        return "redirect:/contracts";
-//    }
-//
-//
-//    @RequestMapping(value = "/edit/contract/{id}", method = RequestMethod.GET)
-//    public String editContract(@PathVariable("id") Integer id, Map<String, Object> map) {
-//
-//        Contracts contracts =  (Contracts) balanceService.getById(id, new Contracts());
-//        map.put("contract", contracts);
-//        map.put("contraсtsList", balanceService.getAll(contracts));
-//        map.put("contragentsList", balanceService.getAll( new ContrAgents()));
-//        map.put("save", "../contract");
-//
-//        return "contracts";
-//    }
-//
+
+
+
+
+
+    @RequestMapping("/alloperdept")
+    public String listRecieptDepartments(Map<String, Object> map, HttpServletRequest  requestBody) {
+
+        DateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+
+        Map<String, String[]> parametrs =  requestBody.getParameterMap();
+
+//        typeOfReturn:
+//        1 - return all list
+//        2 - return  list between start and end  for all Department's
+//        3 - return  list between start and end by Department
+//        4 - return  all list for contract
+//        5 - return  all list for contract by Department
+//        6 - return all list by Department
+
+        int typeOfReturn = 0;
+        Contracts contracts = null;
+        Departments departments = null;
+        Date start = new Date();
+        Date end = new Date();
+
+        if(parametrs.containsKey("all"))
+            typeOfReturn = 1;
+
+        if(parametrs.containsKey("datestart")) {
+            typeOfReturn =2;
+
+
+            Date starT = new Date();
+            try {
+                starT = format.parse(parametrs.get("datestart")[0]);
+            } catch (ParseException e) {
+                log.warning(e.getMessage());
+            }
+
+
+//            starT.setDate(-1);
+            start = new Date(starT.getTime());
+
+            Date enD = new Date(end.getTime()+ (1000 * 60 * 60 * 24));
+
+
+            if (parametrs.containsKey("dateend")){
+
+
+                try {
+
+                    enD = format.parse(parametrs.get("dateend")[0]);
+
+                    enD = new Date(enD.getTime()+ (1000 * 60 * 60 * 24));
+                } catch (ParseException e) {
+                    log.warning(e.getMessage());
+                }
+
+
+
+            }
+
+            end = new Date(enD.getTime());
+
+        }
+
+        if(parametrs.containsKey("contractId")){
+            typeOfReturn = 3;
+            contracts = (Contracts) balanceService.getById(Integer.parseInt(parametrs.get("contractId")[0]), new Contracts());
+        }
+
+
+        if(parametrs.containsKey("departmentId")){
+            typeOfReturn = 4;
+            departments = (Departments) balanceService.getById(Integer.parseInt(parametrs.get("departmentId")[0]), new Departments());
+        }
+
+
+
+        List<ReceiptOperationsDepartments> receiptOperationsDepartmentses = new ArrayList<>();
+
+
+//                typeOfReturn:
+//        1 - return all list
+//        2 - return  list between start and end  for all Department's
+//        3 - return  list between start and end by Department
+//        4 - return  all list for contract
+//        5 - return  all list for contract by Department
+//        6 - return all list by Department
+
+        switch (typeOfReturn){
+            case 1:
+                receiptOperationsDepartmentses = receiptOperDeptService.getAll();
+
+                map.put("tab","all");
+                map.put("type", "Все записи");
+                break;
+            case 2:
+                receiptOperationsDepartmentses = receiptOperDeptService. getAllByDate(start, end);
+                map.put("type", "За период с " + format.format(start).toString()
+                        + " по " + format.format(end).toString());
+                map.put("tab","date");
+                break;
+
+            case 3:
+                receiptOperationsDepartmentses = receiptOperDeptService.getAllByDateDepartment(start, end, departments);
+//                TO-DO
+//                 map.put("tab","??");
+//                 map.put("type", "??");
+
+                break;
+            case 4:
+                receiptOperationsDepartmentses =  receiptOperDeptService.getAllByContract(contracts);
+                map.put("type", "Для контракта №" + contracts.getContractNumber() + " от " + contracts.getStartDate()
+                        + "<br/>Контрагент: " + contracts.getContrAgentId().getName());
+                map.put("tab","contract");
+                break;
+            case 5:
+                receiptOperationsDepartmentses =  receiptOperDeptService.getAllByContractAndDep(contracts, departments);
+//                TO-DO
+//                 map.put("tab","??");
+//                 map.put("type", "??");
+                break;
+            case 6:
+                receiptOperationsDepartmentses =  receiptOperDeptService.getAllbyDept(departments);
+//                TO-DO
+//                 map.put("tab","??");
+//                 map.put("type", "??");
+                break;
+
+        }
+
+
+        Double summ = 0D;
+
+        Double ndc = 0D;
+
+        for (ReceiptOperationsDepartments receiptOperationsDepartments : receiptOperationsDepartmentses){
+
+
+            summ += receiptOperationsDepartments.getSumma();
+            ndc += receiptOperationsDepartments.getNdc();
+
+        }
+
+        map.put("operDepartmentList", receiptOperationsDepartmentses);
+        map.put("summa", summ.floatValue());
+        map.put("ndc", ndc.floatValue());
+        map.put("contraсtsList", balanceService.getAll(new Contracts()));
+        map.put("departmentsList", balanceService.getAll(new Departments()));
+
+        if (!map.containsKey("tab"))
+            map.put("tab","date");
+        return "alloperdept";
+    }
+
+
+
+
 
 
 }

@@ -1,9 +1,11 @@
 package com.github.alexwolfgoncharov.balance.dao.impl;
 
 import com.github.alexwolfgoncharov.balance.dao.ContractsDAO;
+import com.github.alexwolfgoncharov.balance.structure.ContrAgents;
 import com.github.alexwolfgoncharov.balance.structure.Contracts;
 import com.github.alexwolfgoncharov.balance.util.HibernateMyUtil;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -80,6 +82,29 @@ public class ContractDAOImpl implements ContractsDAO {
         return contractsList;
     }
 
+    @Override
+    public List<Contracts> getAllbyContAgent(ContrAgents contrAgents) {
+        List<Contracts> contractsList = null;
+        try {
+
+            HibernateMyUtil.getSessionFactory().getCurrentSession()
+                    .beginTransaction();
+
+            contractsList = HibernateMyUtil.getSessionFactory().getCurrentSession()
+                    .createCriteria(Contracts.class)
+                    .add(Restrictions.eq("contrAgentId", contrAgents))
+                    .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
+            HibernateMyUtil.getSessionFactory().getCurrentSession()
+                    .getTransaction().commit();
+        } catch (Exception e) {
+            HibernateMyUtil.getSessionFactory().getCurrentSession()
+                    .getTransaction().rollback();
+            log.severe(e.getMessage());
+        }
+
+        return contractsList;
+    }
+
     public void modify(Contracts contract) {
         add(contract);
 
@@ -93,6 +118,23 @@ public class ContractDAOImpl implements ContractsDAO {
 
             HibernateMyUtil.getSessionFactory().getCurrentSession()
                     .beginTransaction();
+
+            contract = (Contracts) HibernateMyUtil.getSessionFactory().getCurrentSession()
+                    .get(Contracts.class, contract.getId());
+//            List<ReceiptOperationsContracts> operationsContractsList =
+//                    HibernateMyUtil.getSessionFactory().getCurrentSession()
+//                            .createCriteria(ReceiptOperationsContracts.class)
+//                            .add(Restrictions.eq("contractId", contract))
+//                            .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+//                            .addOrder(Order.asc("time"))
+//                            .list();
+//
+//            for (ReceiptOperationsContracts operationsContracts : operationsContractsList){
+//
+//                HibernateMyUtil.getSessionFactory().getCurrentSession()
+//                        .delete(operationsContracts);
+//            }
+
             HibernateMyUtil.getSessionFactory().getCurrentSession()
                     .delete(contract);
             HibernateMyUtil.getSessionFactory().getCurrentSession()

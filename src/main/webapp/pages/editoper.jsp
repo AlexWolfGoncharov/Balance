@@ -3,11 +3,14 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf8">
-	<title>Управление контрактами. $BalanceSystem</title>
+	<title>Редактирование операции по контракту. BalanceSystem</title>
+
+	<link rel="icon" href="<c:url value="/pages/img/favicon.ico" />" type="image/x-icon">
 
 
 	<!-- Latest compiled and minified JavaScript -->
@@ -66,12 +69,15 @@
 			var rows = document.getElementById("tableOperDept").rows;
 
 			var sum = document.getElementById("opercontract.summa").textContent;
-			sum = parseFloat(sum);
-			 max = sum;
+			sum = parseFloat(sum.replace(/\D+/g,""));
+			max = sum;
 			if(rows.length > 2) {
 				for (var i = 2; i < rows.length; i++){
 
-					var a = parseFloat(document.getElementById("operDept.summa."+(i-1)).innerHTML);
+
+					var depSum = document.getElementById("operDept.summa."+(i-1)).textContent;
+
+					var a = parseFloat(depSum.replace(/\D+/g,""));
 
 					if (!isNaN(a))
 						max = max - a;
@@ -101,7 +107,7 @@
 </head>
 <body>
 <%@include file="header.jsp" %>
-
+<fmt:setLocale value="uk_UA" scope="session"/>
 <c:if test="${error}">
 	<div class="alert alert-warning alert-dismissible" role="alert">
 		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -111,6 +117,9 @@
 
 
 <div class="container">
+	<div class="page-header">
+		<h2>Редактирование операций по контракту</h2>
+	</div>
 
 
 	<h2>Просмотр записи</h2>
@@ -128,9 +137,7 @@
 			<strong>Контракт:</strong>
 		</div>
 
-		<div class="col-sm-10">
-			${opercontract.contractId.contractNumber}
-		</div>
+		<div class="col-sm-10">${opercontract.contractId.contractNumber}</div>
 	</div>
 
 
@@ -139,9 +146,7 @@
 		<div class="col-sm-2 control-label text-right">
 			<strong>Описание:</strong>
 		</div>
-		<div class="col-sm-10">
-			${opercontract.description}
-		</div>
+		<div class="col-sm-10">${opercontract.description}</div>
 
 	</div>
 
@@ -150,11 +155,8 @@
 		<div class="col-sm-2 control-label text-right">
 			<strong>Дата:</strong>
 		</div>
-		<div class="col-sm-10">
-			${opercontract.time}
-		</div>
-
-
+		<div class="col-sm-10" id="timeOfContr"><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss"
+																value="${opercontract.time}" /></div>
 	</div>
 
 
@@ -165,10 +167,8 @@
 			<strong>Сумма:</strong>
 		</div>
 
-		<div class="col-sm-10" id="opercontract.summa">
-			${opercontract.summa}
-
-		</div>
+		<div class="col-sm-10" id="opercontract.summa"><fmt:formatNumber value="${opercontract.summa}"
+																		 type="currency" currencySymbol="грн."/></div>
 
 
 	</div>
@@ -178,11 +178,8 @@
 			<strong>НДС:</strong>
 		</div>
 
-		<div class="col-sm-10">
-
-			${opercontract.ndc}
-
-		</div>
+		<div class="col-sm-10"><fmt:formatNumber value="${opercontract.ndc}"
+												 type="currency" currencySymbol="грн."/></div>
 
 
 	</div>
@@ -214,45 +211,27 @@
 					<th>&nbsp;</th>
 				</tr>
 
-
+				<c:if test="${!empty opercontract.receiptOperationsDepartmentList}">
 				<c:forEach var="operDept" items="${opercontract.receiptOperationsDepartmentList}" varStatus="status">
 
 				<tr>
-					<td>
-							${status.count}
+					<td>${status.count}</td>
+					<td>${operDept.departmentId.nameOfDepartment}</td>
 
-					</td>
-						<td>
-
-								${operDept.departmentId.nameOfDepartment}
-
-
-
-						</td>
+					<td><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss"
+										value="${operDept.time}" /></td>
 
 					<td>
-
-							${operDept.time}
-					</td>
-
-					<td>
-						<div id="operDept.summa.${status.count}">
-								${operDept.summa}
-						</div>
-
+						<div id="operDept.summa.${status.count}"><fmt:formatNumber value="${operDept.summa}"
+																				   type="currency" currencyCode="UAH"/></div>
 
 					</td>
 
-					<td>
-							${operDept.ndc}
 
-					</td>
-					<td>
-							${operDept.description}
-					</td>
-					<td>
-						<a href="/delete/operdep/${operDept.id}" class="btn btn-danger"><span class="glyphicon glyphicon-trash" aria-hidden="true"></a>
-					</td>
+					<td><fmt:formatNumber value="${operDept.ndc}"
+										  type="currency" currencyCode="UAH"/></td>
+					<td>${operDept.description}</td>
+					<td><a href="/delete/operdep/${operDept.id}" class="btn btn-danger"><span class="glyphicon glyphicon-trash" aria-hidden="true"></a></td>
 
 
 				</tr>
@@ -260,6 +239,7 @@
 
 					<%--<c:set var="max" scope="application" value="${max - operDept.summa}"/>--%>
 				</c:forEach>
+				</c:if>
 
 
 				<form:form method="post" id="myForm" action="/addoperdep" commandName="operdep" onsubmit="return validateForm()" class="form-horizontal">
@@ -280,18 +260,19 @@
 
 					</td>
 					<td>
-						<form:input path="time" name="operdep.time" id="time" value="" type="datetime" class="form-control"/>
+						<form:input path="time" name="operdep.time" id="time" type="datetime" class="form-control"
+									value=''/>
 
 					</td>
 
 					<td>
 						<form:input path="summa" name="summa" id="summa" value="" type="number" step="any" class="form-control"
-								onchange="validateForm()" onblur="onBlur()"	 />
+									onchange="validateForm()" onblur="onBlur()"	 />
 
 					</td>
 
 					<td>
-						<%--<input type="checkbox" class="checkbox" id="ndcCheck" onclick="setNdsSum()">--%>
+							<%--<input type="checkbox" class="checkbox" id="ndcCheck" onclick="setNdsSum()">--%>
 						<form:input path="ndc" name="ndcForm" id="ndcForm" value="" type="number" step="any" class="form-control"  onchange="setNdsSum()"/>
 
 					</td>
@@ -310,7 +291,7 @@
 
 
 
-						</form:form>
+				</form:form>
 		</div>
 
 		</td>
@@ -338,6 +319,8 @@
 <script type="text/javascript" src="<c:url value="/pages/js/bootstrap-datetimepicker.ru.js" />" charset="UTF-8"></script>
 <script type="text/javascript">
 
+	var time =   document.getElementById("time");
+	time.value =  document.getElementById("timeOfContr").textContent;
 
 	$("#time").datetimepicker({format: 'yyyy-mm-dd hh:ii:ss', autoclose: true,
 		todayBtn: true, keyboardNavigation: true, language: 'ru', minView: 2});

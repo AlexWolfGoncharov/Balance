@@ -80,4 +80,26 @@ public class UserRolesDAOImpl implements UserRolesDAO {
         }
 
     }
+
+    @Override
+    public UserRoles getById(int id) {
+        UserRoles contrAgents = null;
+
+        try{
+            HibernateMyUtil.getSessionFactory().getCurrentSession()
+                    .beginTransaction();
+
+            contrAgents = (UserRoles) HibernateMyUtil.getSessionFactory().getCurrentSession()
+                    .get(UserRoles.class, id);
+            HibernateMyUtil.getSessionFactory().getCurrentSession()
+                    .getTransaction().commit();
+
+        } catch (Exception e) {
+            HibernateMyUtil.getSessionFactory().getCurrentSession()
+                    .getTransaction().rollback();
+            log.severe(e.getMessage());
+        }
+
+        return contrAgents;
+    }
 }

@@ -5,6 +5,7 @@ import com.github.alexwolfgoncharov.balance.structure.Contracts;
 import com.github.alexwolfgoncharov.balance.structure.ReceiptOperationsContracts;
 import com.github.alexwolfgoncharov.balance.util.HibernateMyUtil;
 import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
@@ -21,7 +22,7 @@ public class ReiceptOperContractsDAOImpl implements ReceiptOperContractsDAO {
     private static final Logger log = Logger.getLogger(ReiceptOperContractsDAOImpl.class
             .getName());
 
-    public void add(ReceiptOperationsContracts receiptOperationsContractscontract) {
+    public long add(ReceiptOperationsContracts receiptOperationsContractscontract) {
         try {
 
             if (receiptOperationsContractscontract.getTime() == null)
@@ -29,7 +30,7 @@ public class ReiceptOperContractsDAOImpl implements ReceiptOperContractsDAO {
             HibernateMyUtil.getSessionFactory().getCurrentSession()
                     .beginTransaction();
             HibernateMyUtil.getSessionFactory().getCurrentSession()
-                    .save(receiptOperationsContractscontract);
+                    .saveOrUpdate(receiptOperationsContractscontract);
             HibernateMyUtil.getSessionFactory().getCurrentSession()
                     .getTransaction().commit();
 
@@ -38,6 +39,7 @@ public class ReiceptOperContractsDAOImpl implements ReceiptOperContractsDAO {
                     .getTransaction().rollback();
             log.severe(e.getMessage());
         }
+        return receiptOperationsContractscontract.getId();
 
     }
 
@@ -73,6 +75,7 @@ public class ReiceptOperContractsDAOImpl implements ReceiptOperContractsDAO {
 
             contractsList = HibernateMyUtil.getSessionFactory().getCurrentSession()
                     .createCriteria(ReceiptOperationsContracts.class)
+                    .addOrder(Order.asc("time"))
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
             HibernateMyUtil.getSessionFactory().getCurrentSession()
                     .getTransaction().commit();
@@ -106,21 +109,23 @@ public class ReiceptOperContractsDAOImpl implements ReceiptOperContractsDAO {
     }
 
     public void delete(ReceiptOperationsContracts contract) {
-
+        Session session = null;
 
 
         try {
 
-            HibernateMyUtil.getSessionFactory().getCurrentSession()
-                    .beginTransaction();
-            HibernateMyUtil.getSessionFactory().getCurrentSession()
-                    .delete(contract);
-            HibernateMyUtil.getSessionFactory().getCurrentSession()
-                    .getTransaction().commit();
+            session = HibernateMyUtil.getSessionFactory().getCurrentSession();
+
+                session.beginTransaction();
+
+            ReceiptOperationsContracts  operationsContracts =   (ReceiptOperationsContracts)  session.get(ReceiptOperationsContracts.class, contract.getId());
+
+                session.delete(operationsContracts);
+    //            HibernateMyUtil.getSessionFactory().getCurrentSession()
+                session.getTransaction().commit();
 
         } catch (Exception e) {
-            HibernateMyUtil.getSessionFactory().getCurrentSession()
-                    .getTransaction().rollback();
+            session.getTransaction().rollback();
             log.severe(e.getMessage());
         }
 
@@ -137,8 +142,9 @@ public class ReiceptOperContractsDAOImpl implements ReceiptOperContractsDAO {
             contractsList = HibernateMyUtil.getSessionFactory().getCurrentSession()
                     .createCriteria(ReceiptOperationsContracts.class)
                     .add(Restrictions.eq("contractId", contract))
-                    .addOrder(Order.asc("id"))
-                    .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
+                    .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                    .addOrder(Order.asc("time"))
+                    .list();
             HibernateMyUtil.getSessionFactory().getCurrentSession()
                     .getTransaction().commit();
         } catch (Exception e) {
@@ -174,8 +180,9 @@ public class ReiceptOperContractsDAOImpl implements ReceiptOperContractsDAO {
             contractsList = HibernateMyUtil.getSessionFactory().getCurrentSession()
                     .createCriteria(ReceiptOperationsContracts.class)
                     .add(Restrictions.between("time", startSql, endSql))
+                    .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .addOrder(Order.asc("time"))
-                    .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
+                    .list();
             HibernateMyUtil.getSessionFactory().getCurrentSession()
                     .getTransaction().commit();
         } catch (Exception e) {

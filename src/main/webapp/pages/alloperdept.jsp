@@ -179,10 +179,7 @@
 			<div >
 
 				<h2 class="text-success">Итого: <fmt:formatNumber value="${summa}"
-																  type="currency"
-																  currencyCode="UAH"/> НДС:<fmt:formatNumber value="${ndc}"
-																												type="currency"
-																											 	currencyCode="UAH"/></h2>
+																  type="currency" currencySymbol="грн."/></h2>
 
 			</div>
 		</c:if>

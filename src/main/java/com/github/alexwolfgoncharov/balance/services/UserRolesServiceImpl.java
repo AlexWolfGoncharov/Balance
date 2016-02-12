@@ -31,4 +31,9 @@ public class UserRolesServiceImpl implements UserRolesService {
     public void delete(UserRoles roles) {
         rolesDAO.delete(roles);
     }
+
+    @Override
+    public UserRoles getById(int id) {
+        return rolesDAO.getById(id);
+    }
 }

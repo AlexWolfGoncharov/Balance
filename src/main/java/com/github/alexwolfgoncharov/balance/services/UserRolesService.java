@@ -12,4 +12,5 @@ public interface UserRolesService {
     void add(UserRoles roles);
     Set<UserRoles> getAll();
     void delete (UserRoles roles);
+    UserRoles getById(int id);
 }

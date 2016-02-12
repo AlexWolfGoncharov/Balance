@@ -2,11 +2,15 @@
 
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<html lang="ru">
+<c:set var="language" value="ru" scope="session" />
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf8">
-    <title>Управление контрактами. $BalanceSystem</title>
+    <title>Управление контрактами. BalanceSystem</title>
+
+    <link rel="icon" href="<c:url value="/pages/img/favicon.ico" />" type="image/x-icon">
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
@@ -23,7 +27,7 @@
     <%--DatePicker JA and CSS--%>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.4.5/jquery.datetimepicker.min.css"  rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.4.5/jquery.datetimepicker.min.js"></script>
-
+    <link href="<c:url value="/pages/css/bootstrap-datetimepicker.min.css" />" rel="stylesheet">
 
     <%--<script--%>
     <%--src="<c:url value="/pages/js/jquery.js" />"></script>--%>
@@ -40,7 +44,7 @@
 </head>
 <body>
 <%@include file="header.jsp" %>
-
+<fmt:setLocale value="uk_UA" scope="session"/>
 <c:if test="${error}">
     <div class="alert alert-warning alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -50,7 +54,11 @@
 
 <c:if test="${!empty contraсtsList}">
     <div class="container">
+        <div class="page-header">
+            <h2>Управление контрактами</h2>
+        </div>
         <h3>Список Контрактов:</h3>
+
 
         <table class="table table-view">
             <tr>
@@ -67,11 +75,17 @@
                 <tr>
                     <td>${myIndex.index + 1}</td>
                     <td>${contract.contractNumber}</td>
-                    <td>${contract.startDate}</td>
-                    <td>${contract.summ} грн.</td>
+                    <td><fmt:formatDate pattern="dd.MM.yyyy"
+                                        value="${contract.startDate}" /></td>
+
+                    <td><fmt:formatNumber value="${contract.summ}"
+                                          type="currency" currencyCode="UAH"/></td>
                     <td>${contract.contrAgentId.name}</td>
                     <td>${contract.description}</td>
-                    <td><a href="./edit/contract/${contract.id}" class="btn btn-warning"> Редактировать</a></td>
+                    <td><div class="btn-group" role="group btn-group-sm" aria-label="Operations">
+                        <a href="/edit/contract/${contract.id}" class="btn btn-warning"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></a>
+                        <a href="/delete/contract/${contract.id}" class="btn btn-danger confirm-modal"><span class="glyphicon glyphicon-trash" aria-hidden="true"></a>
+                    </div></td>
 
                 </tr>
             </c:forEach>
@@ -87,7 +101,7 @@
 
     <form:form method="post" action="${save}" commandName="contract" class="form-horizontal">
 
-        <c:if test="${!empty contraсtsList}">
+        <c:if test="${!empty contract}">
             <form:hidden path="id"/>
         </c:if>
         <div class="form-group">
@@ -107,7 +121,7 @@
                 Дата старта:
             </form:label>
             <div class="col-sm-10">
-                <form:input path="startDate" class="form-control" type="date"/>
+                <form:input path="startDate" class="form-control"  id="startDate"/>
             </div>
 
 
@@ -176,5 +190,55 @@
 
     </form:form>
 </div>
+
+<script type="text/javascript" src="<c:url value="/pages/js/bootstrap-datetimepicker.min.js" />" charset="UTF-8"></script>
+<script type="text/javascript" src="<c:url value="/pages/js/bootstrap-datetimepicker.ru.js" />" charset="UTF-8"></script>
+<script type="text/javascript" src="<c:url value="/pages/js/bootbox.min.js" />" charset="UTF-8"></script>
+
+<script>
+
+
+
+    $("#startDate").datetimepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true,
+        todayBtn: true,
+        keyboardNavigation: true,
+        language: 'ru',
+        minView: 2,
+        pickerPosition: 'top-right'
+    });
+
+
+
+    bootbox.addLocale('my',
+            {
+                OK : 'OK',
+                CANCEL : 'Отменить',
+                CONFIRM : 'Удалить'
+            }
+    );
+
+
+    bootbox.setLocale('my');
+
+    $(document).on("click", ".confirm-modal", function(e) {
+        e.preventDefault();
+        var lHref = $(this).attr('href');
+        if(lHref !== 'undefined') {
+            bootbox.confirm("При удалении будут так же удалены все записи о поступлениях по данному контракту. Удалить?",
+                    function (result) {
+                        if (result) {
+                            window.location.href = lHref;
+                        }
+                    });
+        }
+    });
+
+
+
+
+
+</script>
 </body>
 </html>

@@ -13,6 +13,8 @@ public class HibernateMyUtil {
 	 
 	    private static SessionFactory buildSessionFactory() {
 			if (sessionFactory == null) {
+
+
 				sessionFactory = new Configuration().configure().buildSessionFactory();
 
 			}

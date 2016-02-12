@@ -6,7 +6,9 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf8">
-	<title>Управление пользователями. $BalanceSystem</title>
+	<title>Управление департаментами. BalanceSystem</title>
+
+	<link rel="icon" href="<c:url value="/pages/img/favicon.ico" />" type="image/x-icon">
 
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
@@ -37,7 +39,7 @@
 
 <c:if test="${!empty depList}">
 	<div class="container">
-		<h3>List of Department</h3>
+		<h3>Список Департаментов</h3>
 
 		<table class="table table-view">
 			<tr>
@@ -51,7 +53,11 @@
 					<td>${myIndex.index + 1}</td>
 					<td>${dep.nameOfDepartment}</td>
 					<td>${dep.description}</td>
-					<td><a href="./delete/dep/${dep.id}" class="btn btn-danger"> удалить</a></td>
+					<td>
+						<div class="btn-group" role="group btn-group-sm" aria-label="Operations">
+						<a href="/edit/dep/${dep.id}" class="btn btn-warning"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></a>
+						<a href="/delete/dep/${dep.id}" class="btn btn-danger"><span class="glyphicon glyphicon-trash" aria-hidden="true"></a>
+					</div></td>
 				</tr>
 			</c:forEach>
 		</table>
@@ -60,11 +66,13 @@
 </c:if>
 
 <div class="container">
-
+	<div class="page-header">
+		<h2>Управление Департаментами</h2>
+	</div>
 
 	<h2>Добавить Департамент</h2>
 
-	<form:form method="post" action="adddep" commandName="department" class="form-horizontal">
+	<form:form method="post" action="/adddep" commandName="department" class="form-horizontal">
 		<div class="form-group">
 			<form:label path="nameOfDepartment" class="col-sm-2 control-label">
 				Название:

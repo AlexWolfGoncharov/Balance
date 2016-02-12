@@ -10,7 +10,7 @@ import java.util.List;
  * Created by alexwolf on 01.02.16.
  */
 public interface ReceiptOperContractService {
-    void add(ReceiptOperationsContracts contract);
+    long add(ReceiptOperationsContracts contract);
     ReceiptOperationsContracts getById(long ID);
     List<ReceiptOperationsContracts> getAll();
     void modify(ReceiptOperationsContracts contract);

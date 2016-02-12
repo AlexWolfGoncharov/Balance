@@ -18,9 +18,10 @@ public class ReceiptOperContractServiceImpl implements ReceiptOperContractServic
 
 //    @Autowired
     private static ReceiptOperContractsDAO receiptOperContractsDAO =  new ReiceptOperContractsDAOImpl();
+    private static  ReceiptOperDeptService receiptOperDeptService =  new ReceiptOperDeptServiceImpl();
 
-    public void add(ReceiptOperationsContracts contract) {
-        receiptOperContractsDAO.add(contract);
+    public long add(ReceiptOperationsContracts contract) {
+       return receiptOperContractsDAO.add(contract);
 
     }
 
@@ -39,9 +40,9 @@ public class ReceiptOperContractServiceImpl implements ReceiptOperContractServic
 
     public void delete(ReceiptOperationsContracts contract) {
 
-        List<ReceiptOperationsDepartments> operationsDepartmentsList = contract.getReceiptOperationsDepartmentList();
+        List<ReceiptOperationsDepartments> operationsDepartmentsList = receiptOperDeptService.getAllbyOperContr(contract);
 
-        ReceiptOperDeptService receiptOperDeptService =  new ReceiptOperDeptServiceImpl();
+
         for (ReceiptOperationsDepartments operationsDepartments : operationsDepartmentsList){
 
             receiptOperDeptService.delete(operationsDepartments);

@@ -8,6 +8,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf8">
 	<title>Управление контрактами. $BalanceSystem</title>
 
+	<link rel="icon" href="<c:url value="/pages/img/favicon.ico" />" type="image/x-icon">
 
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
@@ -71,11 +72,13 @@
 
 
 <div class="container">
+	<div class="page-header">
+		<h2>Добавить поступление по Контракту</h2>
+	</div>
 
 
-	<h2>Добавить послупление по Контракту</h2>
 
-	<form:form method="post" action="addbalance" commandName="operContract" class="form-horizontal">
+	<form:form method="post" action="/addbalance" commandName="operContract" class="form-horizontal">
 
 
 		<form:hidden path="id"/>
@@ -180,6 +183,43 @@
 
 	$("#datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii:ss', autoclose: true,
 		todayBtn: true, keyboardNavigation: true, language: 'ru'});
+</script>
+<script>
+
+
+
+	function formatDate(today){
+		var year = today.getFullYear();
+		var mounth = today.getMonth() +1;
+		var day = today.getDate();
+		var hours = today.getHours();
+		var minutes = today.getMinutes();
+		var seconds = today.getSeconds();
+
+		//"yyyy-mm-dd HH:MM:ss"
+		var formated = year + "-"
+				+ (mounth < 10 ? "0"+mounth : mounth) + "-"
+				+ (day < 10 ? "0"+day : day) + " "
+				+ (hours < 10 ? "0"+hours : hours) + ":"
+				+ (minutes < 10 ? "0"+minutes : minutes) + ":"
+				+ (seconds < 10 ? "0"+seconds : seconds);
+
+		return formated;
+
+	}
+
+
+
+	var today = new Date();
+	var formated_date = formatDate(today);
+	document.getElementById('datetime').value = formated_date;
+
+
+	if (document.getElementById('ndcForm').value){
+		document.getElementById('ndcForm').disabled = false;
+
+	}
+
 </script>
 
 </body>

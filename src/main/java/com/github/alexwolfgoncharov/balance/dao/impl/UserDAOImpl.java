@@ -178,6 +178,10 @@ public class UserDAOImpl implements UserDAO {
 
             HibernateMyUtil.getSessionFactory().getCurrentSession()
                     .beginTransaction();
+
+
+            user = (User)  HibernateMyUtil.getSessionFactory().getCurrentSession()
+                    .get(User.class, user.getId());
             HibernateMyUtil.getSessionFactory().getCurrentSession()
                     .delete(user);
             HibernateMyUtil.getSessionFactory().getCurrentSession()

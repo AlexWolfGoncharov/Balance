@@ -47,7 +47,7 @@ public class User implements UserDetails {
     @Basic
     @Column(name = "email", nullable = true, length = 50)
     private String email;
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinTable(name = "app_users_roles", joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "role_id", referencedColumnName = "ID") })
 
     private Set<UserRoles> userRoles;

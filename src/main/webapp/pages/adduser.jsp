@@ -6,8 +6,9 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf8">
-	<title>Управление пользователями. $BalanceSystem</title>
+	<title>Управление пользователями. BalanceSystem</title>
 
+	<link rel="icon" href="<c:url value="/pages/img/favicon.ico" />" type="image/x-icon">
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
@@ -55,14 +56,14 @@
 
 <c:if test="${!empty userList}">
 	<div class="container">
-		<h3>List of USERS</h3>
+		<h3>Список пользователей</h3>
 
 		<table class="table table-view">
 			<tr>
 				<th>#</th>
 				<th>login</th>
 				<th>ФИО</th>
-				<th>access</th>
+				<th>Доступ</th>
 				<th>&nbsp;</th>
 			</tr>
 			<c:forEach items="${userList}" var="user" varStatus="myIndex">
@@ -71,7 +72,10 @@
 					<td>${user.login}</td>
 					<td>${user.lastName}, ${user.firstName}</td>
 					<td>${user.access}</td>
-					<td><a href="./delete/user/${user.login}"> delete</a></td>
+					<td><div class="btn-group" role="group btn-group-sm" aria-label="Operations">
+							<a href="/edit/user/${user.login}" class="btn btn-warning"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></a>
+							<a href="/delete/user/${user.login}" class="btn btn-danger"><span class="glyphicon glyphicon-trash" aria-hidden="true"></a>
+						</div></td>
 				</tr>
 			</c:forEach>
 		</table>
@@ -80,11 +84,13 @@
 </c:if>
 
 <div class="container">
+	<div class="page-header">
+		<h2>Управление пользователями</h2>
+	</div>
 
+	<h2>Добавить нового пользователя</h2>
 
-	<h2>Добавить пользователя</h2>
-
-	<form:form method="post" action="addusers" commandName="user" class="form-horizontal">
+	<form:form method="post" action="/addusers" commandName="user" class="form-horizontal">
 		<div class="form-group">
 			<form:label path="login" class="col-sm-2 control-label">
 				Логин:
@@ -184,8 +190,8 @@
 			</form:label>
 			<div class="col-sm-10">
 				<form:select path="userRoles" class="form-control">
-					<form:option value="ADMIN" label="ADMIN" />
-					<form:option value="USER" label="USER" />
+					<form:option value="1" label="ADMIN" />
+					<form:option value="2" label="USER" />
 
 				</form:select>
 			</div>

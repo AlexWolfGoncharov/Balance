@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,6 +23,7 @@ public class Contracts extends Balance{
     private List <ReceiptOperationsContracts> operationsContractses;
 
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
     public int getId() {
         return id;
@@ -31,7 +33,7 @@ public class Contracts extends Balance{
         this.id = id;
     }
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "contr_agent_id")
     public ContrAgents getContrAgentId() {
         return contrAgentId;
@@ -81,10 +83,16 @@ public class Contracts extends Balance{
         this.description = description;
     }
 
-    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL,  fetch = FetchType.LAZY)
+   //    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE},  fetch = FetchType.LAZY)
     @JoinColumn(name = "contract_id")
     @org.hibernate.annotations.OrderBy(clause = "ID")
     public List<ReceiptOperationsContracts> getOperationsContractses() {
+
+        if(operationsContractses == null){
+            return new ArrayList<ReceiptOperationsContracts>();
+        }
+
         return operationsContractses;
     }
 

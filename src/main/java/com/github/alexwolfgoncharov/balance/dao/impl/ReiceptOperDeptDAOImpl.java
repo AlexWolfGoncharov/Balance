@@ -1,6 +1,7 @@
 package com.github.alexwolfgoncharov.balance.dao.impl;
 
 import com.github.alexwolfgoncharov.balance.dao.ReceiptOperDeptDAO;
+import com.github.alexwolfgoncharov.balance.structure.Contracts;
 import com.github.alexwolfgoncharov.balance.structure.Departments;
 import com.github.alexwolfgoncharov.balance.structure.ReceiptOperationsContracts;
 import com.github.alexwolfgoncharov.balance.structure.ReceiptOperationsDepartments;
@@ -21,7 +22,7 @@ public class ReiceptOperDeptDAOImpl implements ReceiptOperDeptDAO {
     private static final Logger log = Logger.getLogger(ReiceptOperDeptDAOImpl.class
             .getName());
 
-    public void add(ReceiptOperationsDepartments receiptOperationsDepartments) {
+    public long add(ReceiptOperationsDepartments receiptOperationsDepartments) {
         try {
 
             if (receiptOperationsDepartments.getTime() == null)
@@ -39,6 +40,7 @@ public class ReiceptOperDeptDAOImpl implements ReceiptOperDeptDAO {
                     .getTransaction().rollback();
             log.severe(e.getMessage());
         }
+        return receiptOperationsDepartments.getId();
 
     }
 
@@ -135,6 +137,26 @@ public class ReiceptOperDeptDAOImpl implements ReceiptOperDeptDAO {
         return receiptOperationsDepartmentses;
     }
 
+    @Override
+    public List<ReceiptOperationsDepartments> getAllByDate(Date start, Date end) {
+        return null;
+    }
+
+    @Override
+    public List<ReceiptOperationsDepartments> getAllByDateDepartment(Date start, Date end, Departments departments) {
+        return null;
+    }
+
+    @Override
+    public List<ReceiptOperationsDepartments> getAllByContract(Contracts contracts) {
+        return null;
+    }
+
+    @Override
+    public List<ReceiptOperationsDepartments> getAllByContractAndDep(Contracts contracts, Departments departments) {
+        return null;
+    }
+
     public List<ReceiptOperationsDepartments> getAllbyOperContr(ReceiptOperationsContracts receiptOperationsContracts) {
         List<ReceiptOperationsDepartments> receiptOperationsDepartmentses = null;
         try {
@@ -144,7 +166,7 @@ public class ReiceptOperDeptDAOImpl implements ReceiptOperDeptDAO {
 
             receiptOperationsDepartmentses = HibernateMyUtil.getSessionFactory().getCurrentSession()
                     .createCriteria(ReceiptOperationsDepartments.class)
-                    .add(Restrictions.eq("receptOpContrId", receiptOperationsContracts))
+                    .add(Restrictions.eq("receptOpContrId", receiptOperationsContracts.getId()))
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
             HibernateMyUtil.getSessionFactory().getCurrentSession()
                     .getTransaction().commit();

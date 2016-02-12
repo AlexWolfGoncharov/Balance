@@ -10,7 +10,7 @@ import java.util.List;
  * Created by alexwolf on 31.01.16.
  */
 public interface ReceiptOperContractsDAO {
-    void add(ReceiptOperationsContracts contract);
+    long add(ReceiptOperationsContracts contract);
     ReceiptOperationsContracts getById(long ID);
     List<ReceiptOperationsContracts> getAll();
     void modify(ReceiptOperationsContracts contract);

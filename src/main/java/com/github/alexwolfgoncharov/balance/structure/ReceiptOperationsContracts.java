@@ -1,11 +1,8 @@
 package com.github.alexwolfgoncharov.balance.structure;
 
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -24,6 +21,7 @@ public class ReceiptOperationsContracts {
     private List<ReceiptOperationsDepartments> receiptOperationsDepartmentList;
 
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
     public long getId() {
         return id;
@@ -84,7 +82,7 @@ public class ReceiptOperationsContracts {
     }
 
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE}, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL,  fetch = FetchType.EAGER)
     @JoinColumn(name = "recept_op_contr_id")
     @org.hibernate.annotations.OrderBy(clause = "ID")
     @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE,

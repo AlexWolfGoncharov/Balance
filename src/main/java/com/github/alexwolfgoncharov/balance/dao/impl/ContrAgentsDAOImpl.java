@@ -4,6 +4,7 @@ import com.github.alexwolfgoncharov.balance.dao.ContrAgentsDAO;
 import com.github.alexwolfgoncharov.balance.structure.ContrAgents;
 import com.github.alexwolfgoncharov.balance.util.HibernateMyUtil;
 import org.hibernate.Criteria;
+import org.hibernate.Session;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -85,16 +86,16 @@ public class ContrAgentsDAOImpl implements ContrAgentsDAO {
 
     public void delete(ContrAgents contract) {
 
-
+        Session session = null;
 
         try {
 
-            HibernateMyUtil.getSessionFactory().getCurrentSession()
-                    .beginTransaction();
-            HibernateMyUtil.getSessionFactory().getCurrentSession()
-                    .delete(contract);
-            HibernateMyUtil.getSessionFactory().getCurrentSession()
-                    .getTransaction().commit();
+            session =  HibernateMyUtil.getSessionFactory().getCurrentSession();
+
+            session.beginTransaction();
+            contract = (ContrAgents) session.get(ContrAgents.class, contract.getId());
+            session.delete(contract);
+            session.getTransaction().commit();
 
         } catch (Exception e) {
             HibernateMyUtil.getSessionFactory().getCurrentSession()

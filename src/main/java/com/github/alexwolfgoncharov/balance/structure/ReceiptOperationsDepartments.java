@@ -18,6 +18,7 @@ public class ReceiptOperationsDepartments {
     private long receptOpContrId;
 
     @Id
+
     @Column(name = "ID", nullable = false)
     public long getId() {
         return id;

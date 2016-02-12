@@ -6,7 +6,9 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf8">
-	<title>Управление пользователями. $BalanceSystem</title>
+	<title>Управление Контрагентами. BalanceSystem</title>
+
+	<link rel="icon" href="<c:url value="/pages/img/favicon.ico" />" type="image/x-icon">
 
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
@@ -52,7 +54,10 @@
 					<td>${myIndex.index + 1}</td>
 					<td>${contragent.name}</td>
 					<td>${contragent.address}</td>
-					<td><a href="./delete/contragent/${contragent.id}" class="btn btn-danger"> Удалить</a></td>
+					<td><div class="btn-group" role="group btn-group-sm" aria-label="Operations">
+							<a href="/edit/contragent/${contragent.id}" class="btn btn-warning"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></a>
+							<a href="/delete/contragent/${contragent.id}" class="btn btn-danger confirm-modal"><span class="glyphicon glyphicon-trash" aria-hidden="true"></a>
+						</div></td>
 
 				</tr>
 			</c:forEach>
@@ -62,11 +67,14 @@
 </c:if>
 
 <div class="container">
-
+	<div class="page-header">
+		<h2>Управление Контрагентами</h2>
+	</div>
 
 	<h2>Добавить Контрагента</h2>
 
-	<form:form method="post" action="addContagent" commandName="contragent" class="form-horizontal">
+	<form:form method="post" action="/addContagent" commandName="contragent" class="form-horizontal">
+		<form:hidden path="id"/>
 		<div class="form-group">
 			<form:label path="name" class="col-sm-2 control-label">
 				Название:
@@ -79,7 +87,7 @@
 		<div class="form-group">
 
 			<form:label path="address" class="col-sm-2 control-label">
-				Описание:
+				Адресс:
 			</form:label>
 			<div class="col-sm-10">
 				<form:input path="address" class="form-control"/>
@@ -98,5 +106,38 @@
 
 	</form:form>
 </div>
+<script type="text/javascript" src="<c:url value="/pages/js/bootbox.min.js" />" charset="UTF-8"></script>
+
+ <script>
+
+
+
+	 bootbox.addLocale('my',
+			 {
+				 OK : 'OK',
+				 CANCEL : 'Отменить',
+				 CONFIRM : 'Удалить'
+			 }
+	 );
+
+
+	 bootbox.setLocale('my');
+
+	 $(document).on("click", ".confirm-modal", function(e) {
+		 e.preventDefault();
+		 var lHref = $(this).attr('href');
+		 if(lHref !== 'undefined') {
+			 bootbox.confirm("При удалении будут так же удалены вск контракты по контрагенту и все записи о поступлениях по ним. Удалить?",
+					 function (result) {
+						 if (result) {
+							 window.location.href = lHref;
+						 }
+					 });
+		 }
+	 });
+
+
+
+ </script>
 </body>
 </html>

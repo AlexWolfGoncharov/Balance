@@ -50,7 +50,7 @@
                             <li role="separator" class="divider"></li>
                             <li><a  id="users1"  href="<c:url value="/allopercontract" />"><i style="vertical-align:middle; font-size: 3em;" class="material-icons">work</i>Поступления по Контрактам</a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a  id="dept"  href="<c:url value="/alloperdept" />"><i style="vertical-align:middle; font-size: 3em;" class="material-icons">business</i>Поступления по Департаментаментам</a></li>
+                            <li><a  id="dept"  href="<c:url value="/alloperdept" />"><i style="vertical-align:middle; font-size: 3em;" class="material-icons">business</i>Поступления по Департаментам</a></li>
                             <li role="separator" class="divider"></li>
 
 
@@ -107,3 +107,10 @@
     </div><!-- /.container-fluid -->
 </nav>
 
+<div class="footer" >
+
+
+
+            <p class="footer-brand">© AlexWolfGoncharov 2016 </p>
+
+</div>

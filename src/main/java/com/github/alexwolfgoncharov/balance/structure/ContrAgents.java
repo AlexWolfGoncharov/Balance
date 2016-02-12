@@ -18,6 +18,7 @@ public class ContrAgents extends Balance {
     List<Contracts> allContracts;
 
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
     public int getId() {
         return id;
@@ -47,7 +48,9 @@ public class ContrAgents extends Balance {
         this.address = address;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+
+    @OneToMany(cascade = CascadeType.ALL,  fetch = FetchType.LAZY)
+//    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE}, fetch = FetchType.LAZY)
     @JoinColumn(name = "contr_agent_id")
     @org.hibernate.annotations.OrderBy(clause = "ID")
     public List<Contracts> getAllContracts() {
@@ -86,7 +89,7 @@ public class ContrAgents extends Balance {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
-                ", allContractsCount=" + allContracts.size() +
+//                ", allContractsCount=" + allContracts.size() +
                 '}';
     }
 }
