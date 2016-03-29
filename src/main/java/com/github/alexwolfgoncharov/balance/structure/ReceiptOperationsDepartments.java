@@ -1,6 +1,10 @@
 package com.github.alexwolfgoncharov.balance.structure;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 /**
@@ -12,10 +16,11 @@ public class ReceiptOperationsDepartments {
     private long id;
     private Timestamp time;
     private Departments departmentId;
-    private double summa;
-    private double ndc;
+    private BigDecimal summa;
+    private BigDecimal ndc;
     private String description;
-    private long receptOpContrId;
+//    private long receptOpContrId;
+    private ReceiptOperationsContracts receptOpContrId;
 
     @Id
 
@@ -52,21 +57,21 @@ public class ReceiptOperationsDepartments {
 
     @Basic
     @Column(name = "summa", nullable = false, precision = 0)
-    public double getSumma() {
+    public BigDecimal getSumma() {
         return summa;
     }
 
-    public void setSumma(double summa) {
+    public void setSumma(BigDecimal summa) {
         this.summa = summa;
     }
 
     @Basic
     @Column(name = "NDC", nullable = true, precision = 0)
-    public double getNdc() {
+    public BigDecimal getNdc() {
         return ndc;
     }
 
-    public void setNdc(double ndc) {
+    public void setNdc(BigDecimal ndc) {
         this.ndc = ndc;
     }
 
@@ -80,47 +85,47 @@ public class ReceiptOperationsDepartments {
         this.description = description;
     }
 
-    @Basic
-    @Column(name = "recept_op_contr_id")
-    public long getReceptOpContrId() {
+//    @Basic
+//    @Column(name = "recept_op_contr_id")
+    @ManyToOne
+    @JoinColumn(name = "recept_op_contr_id")
+    @Fetch(FetchMode.SELECT)
+
+    public ReceiptOperationsContracts getReceptOpContrId() {
         return receptOpContrId;
     }
 
-    public void setReceptOpContrId(long receptOpContrId) {
+    public void setReceptOpContrId(ReceiptOperationsContracts receptOpContrId) {
         this.receptOpContrId = receptOpContrId;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof ReceiptOperationsDepartments)) return false;
 
         ReceiptOperationsDepartments that = (ReceiptOperationsDepartments) o;
 
-        if (id != that.id) return false;
-        if (departmentId != that.departmentId) return false;
-        if (Double.compare(that.summa, summa) != 0) return false;
-        if (Double.compare(that.ndc, ndc) != 0) return false;
-        if (receptOpContrId != that.receptOpContrId) return false;
-        if (time != null ? !time.equals(that.time) : that.time != null) return false;
-        if (description != null ? !description.equals(that.description) : that.description != null) return false;
+        if (getId() != that.getId()) return false;
+        if (!getTime().equals(that.getTime())) return false;
+        if (!getDepartmentId().equals(that.getDepartmentId())) return false;
+        if (!getSumma().equals(that.getSumma())) return false;
+        if (getNdc() != null ? !getNdc().equals(that.getNdc()) : that.getNdc() != null) return false;
+        if (getDescription() != null ? !getDescription().equals(that.getDescription()) : that.getDescription() != null)
+            return false;
+        return getReceptOpContrId().equals(that.getReceptOpContrId());
 
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result;
-        long temp;
-        result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (time != null ? time.hashCode() : 0);
-        result = 31 * result + departmentId.getId();
-        temp = Double.doubleToLongBits(summa);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(ndc);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (int) (receptOpContrId ^ (receptOpContrId >>> 32));
+        int result = (int) (getId() ^ (getId() >>> 32));
+        result = 31 * result + getTime().hashCode();
+        result = 31 * result + getDepartmentId().hashCode();
+        result = 31 * result + getSumma().hashCode();
+        result = 31 * result + (getNdc() != null ? getNdc().hashCode() : 0);
+        result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
+        result = 31 * result + getReceptOpContrId().hashCode();
         return result;
     }
 
@@ -133,7 +138,7 @@ public class ReceiptOperationsDepartments {
                 ", summa=" + summa +
                 ", ndc=" + ndc +
                 ", description='" + description + '\'' +
-                ", receptOpContrId=" + receptOpContrId +
+                ", receptOpContrId=" + receptOpContrId.getId() +
                 '}';
     }
 

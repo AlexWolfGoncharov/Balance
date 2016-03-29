@@ -65,14 +65,14 @@
 
 	<div class="page-header">
 
-		<h2>Операции по контрактам</h2>
+		<h2>Операции по департаментам</h2>
 		<!-- Nav tabs -->
 		<ul class="nav nav-tabs" role="tablist">
 
 			<li role="presentation"  class="active">
-				<a href="#date" aria-controls="date" role="tab" data-toggle="tab" id="date-tab"><i style="vertical-align:middle; font-size: 2em;" class="material-icons">date_range</i>Выбор за дату</a></li>
-			<li role="presentation">
 				<a href="#contract" aria-controls="contract" role="tab" data-toggle="tab" id="contract-tab"><i style="vertical-align:middle; font-size: 2em;" class="material-icons">work</i>Выбор по контракту</a></li>
+			<li role="presentation">
+				<a href="#department" aria-controls="department" role="tab" data-toggle="tab" id="department-tab"><i style="vertical-align:middle; font-size: 2em;" class="material-icons">business</i>Выбор по департаменту</a></li>
 			<li role="presentation">
 				<a href="#all" aria-controls="all" role="tab" data-toggle="tab" id="all-tab"><i style="vertical-align:middle; font-size: 2em;" class="material-icons">view_module</i>Отображение всех</a></li>
 
@@ -80,42 +80,41 @@
 
 		<!-- Tab panes -->
 		<div class="tab-content">
-			<div role="tabpanel" class="tab-pane active" id="date" aria-labelledby="date-tab">
-
-				<h2>Выбор записей за период </h2>
-
-
-				<form:form method="get" action="allopercontract"  class="form-inline">
-
-
-					<div class="form-group">
-						<label for="datestart">с </label>
-						<input name="datestart" class="form-control" type="datetime" id="datestart" placeholder="дд.мм.гггг" value="<%= request.getParameter("datestart") %>"/>
-					</div>
-					<div class="form-group">
-						<label for="dateend">по </label>
-						<input name="dateend" class="form-control" type="datetime" id="dateend" placeholder="дд.мм.гггг" value="<%= request.getParameter("dateend") %>"/>
-					</div>
-					<button type="submit" class="btn btn-success text-center">Поиск</button>
-
-
-				</form:form>
-
-
-
-			</div>
-			<div role="tabpanel" class="tab-pane" id="contract" aria-labelledby="contract-tab">
+			<div role="tabpanel" class="tab-pane active" id="contract" aria-labelledby="contract-tab">
 
 
 				<h2>Выбор записей по контракту </h2>
 				<div class="hidden" id="currentContract"><%= request.getParameter("contractId") %></div>
 
-				<form:form method="get" action="allopercontract"  class="form-inline" name="contraсtsList">
+				<form:form method="get" action="alloperdept"  class="form-inline" name="contraсtsList">
 
 					<select name="contractId" class="form-control" id="contractId">
 
 						<c:forEach items="${contraсtsList}" var="contragent" varStatus="myIndex">
-							<option value="${contragent.id}" label="№${contragent.contractNumber} | ${contragent.startDate} | ${contragent.description}" />
+							<option value="${contragent.id}">№${contragent.contractNumber} | ${contragent.startDate} | ${contragent.description}</option>
+						</c:forEach>
+
+					</select>
+					<button type="submit" class="btn btn-success text-center">Поиск</button>
+				</form:form>
+
+
+
+
+
+			</div>
+			<div role="tabpanel" class="tab-pane" id="department" aria-labelledby="department-tab">
+
+
+				<h2>Выбор записей по департаменту </h2>
+				<div class="hidden" id="currentDepartment"><%= request.getParameter("departmentId") %></div>
+
+				<form:form method="get" action="alloperdept"  class="form-inline" name="departmentsList">
+
+					<select name="departmentId" class="form-control" id="departmentId">
+
+						<c:forEach items="${departmentsList}" var="dep" varStatus="myIndex">
+							<option value="${dep.id}" >${dep.nameOfDepartment}</option>
 						</c:forEach>
 
 
@@ -123,21 +122,7 @@
 					<button type="submit" class="btn btn-success text-center">Поиск</button>
 				</form:form>
 
-				<script>
 
-					var contractId = document.getElementById("currentContract").textContent;
-					var select = document.getElementById("contractId");
-
-					var i;
-					for (i = 0; i < select.length; i++) {
-						if (select.options[i].value  == contractId){
-							select.options[i].selected = true;
-
-						}
-					}
-
-
-				</script>
 
 			</div>
 			<div role="tabpanel" class="tab-pane" id="all" aria-labelledby="all-tab">
@@ -145,7 +130,7 @@
 
 				<h2>Отображение всех записей</h2>
 
-				<form:form method="get" action="allopercontract"  class="form-inline">
+				<form:form method="get" action="alloperdept"  class="form-inline">
 
 					<input hidden="true" name="all" value="1"/>
 
@@ -164,11 +149,120 @@
 
 
 
+	<c:if test="${!empty itogForDepartments}">
+
+		<h2>Итоги по Департаменту <c:if test="${!empty department}">${department.nameOfDepartment}</c:if> </h2>
+
+		<table class="table table-responsive table-striped">
+			<tr>
+				<th>#</th>
+				<th>Контракт</th>
+				<th>Кол-во операций</th>
+				<th>Сумма</th>
+				<th>НДС</th>
+			</tr>
+			<tbody>
+			<c:forEach items="${itogForDepartments}" var="itorDep" varStatus="myIndex">
+				<tr>
+					<td>${myIndex.index + 1}</td>
+					<td>№${itorDep.contracts.contractNumber} от <fmt:formatDate pattern="dd.MM.yyyy"
+																				value="${itorDep.contracts.startDate}" /><br/>(${itorDep.contracts.contrAgentId.name})</td>
+					<td>${itorDep.countOfOperations}</td>
+					<td><fmt:formatNumber value="${itorDep.summa}"
+										  type="currency" currencyCode="UAH" /></td>
+					<td><fmt:formatNumber value="${itorDep.ndc}"
+										  type="currency" currencyCode="UAH" /></td>
+				</tr>
 
 
-	<c:if test="${!empty operContractList}">
+			</c:forEach>
+			<tr class="info">
+				<td></td>
+				<td>ИТОГО:</td>
+				<td>${count}</td>
+				<td><fmt:formatNumber value="${summa}"
+									  type="currency" currencyCode="UAH"/></td>
+				<td><fmt:formatNumber value="${ndc}"
+									  type="currency"
+									  currencyCode="UAH"/></td>
+			</tr>
+			</tbody>
+
+		</table>
+
+
+	<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+		Показать все записи
+	</button>
+	<div class="collapse" id="collapseExample">
+		<div class="well container ">
+
+
+	</c:if>
+
+
+
+
+
+
+	<c:if test="${!empty itogForContracts}">
+
+		<h2>Итоги по Контракту<c:if test="${!empty contract}"> №${contract.contractNumber} от <fmt:formatDate pattern="dd.MM.yyyy"
+																											   value="${contract.startDate}" /><br/>(${contract.contrAgentId.name})</c:if></h2>
+
+		<table class="table table-responsive table-striped">
+			<tr>
+				<th>#</th>
+				<th>Департамент</th>
+				<th>Кол-во операций</th>
+				<th>Сумма</th>
+				<th>НДС</th>
+			</tr>
+			<tbody>
+			<c:forEach items="${itogForContracts}" var="itorContract" varStatus="myIndex">
+				<tr>
+					<td>${myIndex.index + 1}</td>
+					<td>${itorContract.departments.nameOfDepartment}</td>
+					<td>${itorContract.countOfOperations}</td>
+					<td><fmt:formatNumber value="${itorContract.summa}"
+										   type="currency" currencyCode="UAH" /></td>
+					<td><fmt:formatNumber value="${itorContract.ndc}"
+										   type="currency" currencyCode="UAH" /></td>
+				</tr>
+
+
+			</c:forEach>
+			<tr class="info">
+				<td></td>
+				<td>ИТОГО:</td>
+				<td>${count}</td>
+				<td><fmt:formatNumber value="${summa}"
+									  type="currency" currencyCode="UAH"/></td>
+				<td><fmt:formatNumber value="${ndc}"
+									  type="currency"
+									  currencyCode="UAH"/></td>
+			</tr>
+			</tbody>
+
+		</table>
+
+
+		<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+			Показать все записи
+		</button>
+		<div class="collapse" id="collapseExample">
+			<div class="well container ">
+
+
+	</c:if>
+
+
+
+
+
+	<c:if test="${!empty operDepartmentList}">
 	<div class="container">
-		<h2>Список операций</h2>
+		<h2>Список  операций</h2>
 		<c:if test="${!empty type}">
 			<h3>${type}</h3>
 		</c:if>
@@ -178,43 +272,44 @@
 
 			<div >
 
+
 				<h2 class="text-success">Итого: <fmt:formatNumber value="${summa}"
-																  type="currency" currencySymbol="грн."/></h2>
+																  type="currency"
+																  currencyCode="UAH"/></h2>
+				<h2 class="text-danger">НДС: <fmt:formatNumber value="${ndc}"
+															   type="currency"
+															   currencyCode="UAH"/></h2>
 
 			</div>
 		</c:if>
 
-		<table class="table table-view">
+		<table class="table table-condensed table-responsive col-xs-11 col-sm-8 col-md-11">
 			<tr>
 				<th>#</th>
 				<th>Дата время</th>
+				<th>Департамент</th>
 				<th>Контракт</th>
 				<th>Сумма, грн</th>
 				<th>НДС, грн</th>
 				<th>Описание</th>
-				<th>&nbsp;</th>
+
 
 			</tr>
-			<c:forEach items="${operContractList}" var="operContract" varStatus="myIndex">
+			<c:forEach items="${operDepartmentList}" var="operDepartment" varStatus="myIndex">
 				<tr>
 					<td>${myIndex.index + 1}</td>
 					<td><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss"
-										value="${operContract.time}" /></td>
-					<td>${operContract.contractId.contractNumber}</td>
+										value="${operDepartment.time}" /></td>
+					<td>${operDepartment.departmentId.nameOfDepartment}</td>
+					<td>${operDepartment.receptOpContrId.contractId.contractNumber}</td>
+
 					<td>
-						<fmt:formatNumber value="${operContract.summa}"
+						<fmt:formatNumber value="${operDepartment.summa}"
 										  type="currency" currencyCode="UAH" />
 										  </td>
-					<td><fmt:formatNumber value="${operContract.ndc}"
+					<td><fmt:formatNumber value="${operDepartment.ndc}"
 										  type="currency" currencyCode="UAH"/></td>
-					<td>${operContract.description}</td>
-					<td>
-						<div class="btn-group" role="group btn-group-sm" aria-label="Operations">
-							<a href="./view/opercontract/${operContract.id}" class="btn btn-primary"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span></a>
-							<a href="./edit/opercontract/${operContract.id}" class="btn btn-warning"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></a>
-							<a href="./delete/opercontract/${operContract.id}" class="btn btn-danger confirm-modal"><span class="glyphicon glyphicon-trash" aria-hidden="true"></a>
-						</div>
-					</td>
+					<td>${operDepartment.description}</td>
 				</tr>
 			</c:forEach>
 		</table>
@@ -226,53 +321,13 @@
 
 </div>
 
-
+		</div>
+</div>
 <script type="text/javascript" src="<c:url value="/pages/js/bootstrap-datetimepicker.min.js" />" charset="UTF-8"></script>
 <script type="text/javascript" src="<c:url value="/pages/js/bootstrap-datetimepicker.ru.js" />" charset="UTF-8"></script>
 <script type="text/javascript" src="<c:url value="/pages/js/bootbox.min.js" />" charset="UTF-8"></script>
 <script type="text/javascript">
 	$('#${tab}-tab').tab('show')
-
-
-	$("#datestart").datetimepicker({format: 'dd.mm.yyyy', autoclose: true,
-		todayBtn: true, keyboardNavigation: true, language: 'ru', minView: 2});
-
-
-	$("#dateend").datetimepicker({format: 'dd.mm.yyyy', autoclose: true,
-		todayBtn: true, keyboardNavigation: true, language: 'ru', minView: 2});
-
-
-
-
-
-	function formatDate(today){
-		var year = today.getFullYear();
-		var mounth = today.getMonth() +1;
-		var day = today.getDate();
-		var hours = today.getHours();
-		var minutes = today.getMinutes();
-		var seconds = today.getSeconds();
-
-		//"dd.mm.yyyy"
-
-		var formated = (day < 10 ? "0"+day : day) + "."
-				+ (mounth < 10 ? "0"+mounth : mounth) + "."
-				+year
-
-		return formated;
-
-	}
-
-	var startDate = document.getElementById('datestart');
-	if (startDate.value == 'null') {
-		startDate.value = formatDate(new Date());
-	}
-
-	var endDate = document.getElementById('dateend');
-	if (endDate.value == 'null') {
-		endDate.value = formatDate(new Date());
-	}
-
 
 
 
@@ -291,7 +346,7 @@
 		e.preventDefault();
 		var lHref = $(this).attr('href');
 		if(lHref !== 'undefined') {
-			bootbox.confirm("При удалении будут так же удалены все записи о распределениях данной проводки по департаментам. Удалить?",
+			bootbox.confirm("Вы точно хотите удалить данную запись?",
 					function (result) {
 						if (result) {
 							window.location.href = lHref;
@@ -300,6 +355,37 @@
 		}
 	});
 
+
+
+</script>
+<script>
+
+	var contractId = document.getElementById("currentContract").textContent;
+	var select = document.getElementById("contractId");
+
+	var i;
+	for (i = 0; i < select.length; i++) {
+		if (select.options[i].value  == contractId){
+			select.options[i].selected = true;
+
+		}
+	}
+
+
+</script>
+
+<script>
+
+	var departmentId = document.getElementById("currentDepartment").textContent;
+	var select = document.getElementById("departmentId");
+
+	var i;
+	for (i = 0; i < select.length; i++) {
+		if (select.options[i].value  == departmentId){
+			select.options[i].selected = true;
+
+		}
+	}
 
 
 </script>

@@ -49,22 +49,23 @@ public class ReceiptOperDeptServiceImpl implements ReceiptOperDeptService{
 
     @Override
     public List<ReceiptOperationsDepartments> getAllByDate(Date start, Date end) {
-        return null;
+        return receiptOperDeptDAO.getAllByDate(start, end);
     }
 
     @Override
     public List<ReceiptOperationsDepartments> getAllByDateDepartment(Date start, Date end, Departments departments) {
-        return null;
+        return receiptOperDeptDAO.getAllByDateDepartment(start, end, departments);
     }
 
     @Override
     public List<ReceiptOperationsDepartments> getAllByContract(Contracts contracts) {
-        return null;
+
+        return receiptOperDeptDAO.getAllByContract(contracts);
     }
 
     @Override
     public List<ReceiptOperationsDepartments> getAllByContractAndDep(Contracts contracts, Departments departments) {
-        return null;
+        return receiptOperDeptDAO.getAllByContractAndDep(contracts, departments);
     }
 
     public List<ReceiptOperationsDepartments> getAllbyOperContr(ReceiptOperationsContracts receiptOperationsContracts) {

@@ -133,53 +133,41 @@
 
 	<div class="form-group">
 
-		<div class="col-sm-2 control-label text-right">
-			<strong>Контракт:</strong>
-		</div>
-
-		<div class="col-sm-10">${opercontract.contractId.contractNumber}</div>
+		<div class="col-sm-2 control-label text-right"><strong>Контракт:</strong></div>
+		<div class="col-sm-10">${opercontract.contractId.contractNumber}&nbsp;</div>
 	</div>
 
 
 
 	<div class="form-group">
-		<div class="col-sm-2 control-label text-right">
-			<strong>Описание:</strong>
-		</div>
-		<div class="col-sm-10">${opercontract.description}</div>
-
+		<div class="col-sm-2 control-label text-right"><strong>Описание:</strong></div>
+		<div class="col-sm-10">${opercontract.description}&nbsp;</div>
 	</div>
 
 
 	<div class="form-group">
-		<div class="col-sm-2 control-label text-right">
-			<strong>Дата:</strong>
-		</div>
+		<div class="col-sm-2 control-label text-right"><strong>Дата:</strong></div>
 		<div class="col-sm-10" id="timeOfContr"><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss"
-																value="${opercontract.time}" /></div>
+																value="${opercontract.time}" />&nbsp;</div>
 	</div>
 
 
 	<div class="form-group">
 
 
-		<div class="col-sm-2 control-label text-right">
-			<strong>Сумма:</strong>
-		</div>
+		<div class="col-sm-2 control-label text-right"><strong>Сумма:</strong></div>
 
 		<div class="col-sm-10" id="opercontract.summa"><fmt:formatNumber value="${opercontract.summa}"
-																		 type="currency" currencySymbol="грн."/></div>
+																		 type="currency" currencySymbol="грн."/>&nbsp;</div>
 
 
 	</div>
 
 	<div class="form-group">
-		<div class="col-sm-2 control-label text-right">
-			<strong>НДС:</strong>
-		</div>
+		<div class="col-sm-2 control-label text-right"><strong>НДС:</strong></div>
 
 		<div class="col-sm-10"><fmt:formatNumber value="${opercontract.ndc}"
-												 type="currency" currencySymbol="грн."/></div>
+												 type="currency" currencySymbol="грн."/>&nbsp;</div>
 
 
 	</div>
@@ -245,7 +233,7 @@
 				<form:form method="post" id="myForm" action="/addoperdep" commandName="operdep" onsubmit="return validateForm()" class="form-horizontal">
 				<tr>
 					<td>
-						<form:hidden path="receptOpContrId" value="${opercontract.id}"/>
+						<form:hidden path="receptOpContrId.id" value="${opercontract.id}"/>
 					</td>
 
 					<td>

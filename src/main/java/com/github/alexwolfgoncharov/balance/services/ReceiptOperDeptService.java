@@ -4,6 +4,7 @@ import com.github.alexwolfgoncharov.balance.structure.Contracts;
 import com.github.alexwolfgoncharov.balance.structure.Departments;
 import com.github.alexwolfgoncharov.balance.structure.ReceiptOperationsContracts;
 import com.github.alexwolfgoncharov.balance.structure.ReceiptOperationsDepartments;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 /**
  * Created by alexwolf on 01.02.16.
  */
+@Service
 public interface ReceiptOperDeptService {
     long add(ReceiptOperationsDepartments contract);
     ReceiptOperationsDepartments getById(long ID);

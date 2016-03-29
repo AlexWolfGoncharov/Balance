@@ -8,6 +8,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -22,6 +23,8 @@ public class ReiceptOperContractsDAOImpl implements ReceiptOperContractsDAO {
     private static final Logger log = Logger.getLogger(ReiceptOperContractsDAOImpl.class
             .getName());
 
+
+    @Transactional
     public long add(ReceiptOperationsContracts receiptOperationsContractscontract) {
         try {
 
@@ -43,6 +46,8 @@ public class ReiceptOperContractsDAOImpl implements ReceiptOperContractsDAO {
 
     }
 
+
+    @Transactional
     public ReceiptOperationsContracts getById(long ID) {
         ReceiptOperationsContracts contrAgents = null;
 
@@ -64,6 +69,7 @@ public class ReiceptOperContractsDAOImpl implements ReceiptOperContractsDAO {
         return contrAgents;
     }
 
+    @Transactional
     public List<ReceiptOperationsContracts> getAll() {
 
 
@@ -88,6 +94,7 @@ public class ReiceptOperContractsDAOImpl implements ReceiptOperContractsDAO {
         return contractsList;
     }
 
+    @Transactional
     public void modify(ReceiptOperationsContracts contract) {
         try {
 
@@ -108,6 +115,7 @@ public class ReiceptOperContractsDAOImpl implements ReceiptOperContractsDAO {
 
     }
 
+    @Transactional
     public void delete(ReceiptOperationsContracts contract) {
         Session session = null;
 
@@ -132,6 +140,7 @@ public class ReiceptOperContractsDAOImpl implements ReceiptOperContractsDAO {
 
     }
 
+    @Transactional
     public List<ReceiptOperationsContracts> getAllByContract(Contracts contract) {
         List<ReceiptOperationsContracts> contractsList = null;
         try {
@@ -156,7 +165,7 @@ public class ReiceptOperContractsDAOImpl implements ReceiptOperContractsDAO {
         return contractsList;
     }
 
-    @Override
+    @Transactional
     public List<ReceiptOperationsContracts> getAllForDate(Date start, Date end) {
 
 

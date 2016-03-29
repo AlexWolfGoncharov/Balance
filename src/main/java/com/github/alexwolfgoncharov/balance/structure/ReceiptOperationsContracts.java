@@ -3,6 +3,7 @@ package com.github.alexwolfgoncharov.balance.structure;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -15,8 +16,8 @@ public class ReceiptOperationsContracts {
     private long id;
     private Timestamp time;
     private Contracts contractId;
-    private double summa;
-    private Double ndc;
+    private BigDecimal summa;
+    private BigDecimal ndc;
     private String description;
     private List<ReceiptOperationsDepartments> receiptOperationsDepartmentList;
 
@@ -53,21 +54,21 @@ public class ReceiptOperationsContracts {
 
     @Basic
     @Column(name = "summa", nullable = false, precision = 0)
-    public double getSumma() {
+    public BigDecimal getSumma() {
         return summa;
     }
 
-    public void setSumma(double summa) {
+    public void setSumma(BigDecimal summa) {
         this.summa = summa;
     }
 
     @Basic
     @Column(name = "NDC", nullable = true, precision = 0)
-    public Double getNdc() {
+    public BigDecimal getNdc() {
         return ndc;
     }
 
-    public void setNdc(Double ndc) {
+    public void setNdc(BigDecimal ndc) {
         this.ndc = ndc;
     }
 
@@ -104,31 +105,30 @@ public class ReceiptOperationsContracts {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof ReceiptOperationsContracts)) return false;
 
         ReceiptOperationsContracts that = (ReceiptOperationsContracts) o;
 
-        if (id != that.id) return false;
-        if (contractId != that.contractId) return false;
-        if (Double.compare(that.summa, summa) != 0) return false;
-        if (time != null ? !time.equals(that.time) : that.time != null) return false;
-        if (ndc != null ? !ndc.equals(that.ndc) : that.ndc != null) return false;
-        if (description != null ? !description.equals(that.description) : that.description != null) return false;
+        if (getId() != that.getId()) return false;
+        if (!getTime().equals(that.getTime())) return false;
+        if (!getContractId().equals(that.getContractId())) return false;
+        if (!getSumma().equals(that.getSumma())) return false;
+        if (getNdc() != null ? !getNdc().equals(that.getNdc()) : that.getNdc() != null) return false;
+        if (getDescription() != null ? !getDescription().equals(that.getDescription()) : that.getDescription() != null)
+            return false;
+        return getReceiptOperationsDepartmentList() != null ? getReceiptOperationsDepartmentList().equals(that.getReceiptOperationsDepartmentList()) : that.getReceiptOperationsDepartmentList() == null;
 
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result;
-        long temp;
-        result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (time != null ? time.hashCode() : 0);
-        result = 31 * result + contractId.getId();
-        temp = Double.doubleToLongBits(summa);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (ndc != null ? ndc.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
+        int result = (int) (getId() ^ (getId() >>> 32));
+        result = 31 * result + getTime().hashCode();
+        result = 31 * result + getContractId().hashCode();
+        result = 31 * result + getSumma().hashCode();
+        result = 31 * result + (getNdc() != null ? getNdc().hashCode() : 0);
+        result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
+        result = 31 * result + (getReceiptOperationsDepartmentList() != null ? getReceiptOperationsDepartmentList().hashCode() : 0);
         return result;
     }
 

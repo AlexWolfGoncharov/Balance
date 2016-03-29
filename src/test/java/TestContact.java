@@ -45,7 +45,7 @@ public class TestContact {
 
         ReceiptOperContractService receiptOperContractService = ServiceFactory.getFactory().getReceiptOperContractService();
 
-        List<ReceiptOperationsContracts> operationsContractses = receiptOperContractService.getAllByContract(contract);
+        List<ReceiptOperationsContracts> operationsContractses = receiptOperContractService.getAll();
 
         for (ReceiptOperationsContracts operationsContracts : operationsContractses){
             System.out.println(operationsContracts.toString());

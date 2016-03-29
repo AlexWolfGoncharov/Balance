@@ -5,6 +5,7 @@ import com.github.alexwolfgoncharov.balance.structure.Balance;
 import com.github.alexwolfgoncharov.balance.util.HibernateMyUtil;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -12,11 +13,13 @@ import java.util.logging.Logger;
 /**
  * Created by alexwolf on 31.01.16.
  */
+
 public class BalanceDAOImpl implements BalanceDAO {
 
     private static final Logger log = Logger.getLogger(BalanceDAOImpl.class
             .getName());
 
+    @Transactional
     public void add(Balance contract) {
         try {
 
@@ -34,7 +37,7 @@ public class BalanceDAOImpl implements BalanceDAO {
         }
 
     }
-
+    @Transactional
     public Balance getById(int ID, Object o) {
         Balance contrAgents = null;
 
@@ -55,7 +58,7 @@ public class BalanceDAOImpl implements BalanceDAO {
 
         return contrAgents;
     }
-
+    @Transactional
     public List<Balance> getAll(Object o) {
 
 
@@ -78,12 +81,12 @@ public class BalanceDAOImpl implements BalanceDAO {
 
         return contractsList;
     }
-
+    @Transactional
     public void modify(Balance contract) {
         add(contract);
 
     }
-
+    @Transactional
     public void delete(Balance contract) {
 
 

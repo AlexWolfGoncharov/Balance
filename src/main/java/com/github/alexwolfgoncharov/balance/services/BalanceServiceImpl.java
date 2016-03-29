@@ -3,12 +3,15 @@ package com.github.alexwolfgoncharov.balance.services;
 import com.github.alexwolfgoncharov.balance.dao.BalanceDAO;
 import com.github.alexwolfgoncharov.balance.dao.impl.BalanceDAOImpl;
 import com.github.alexwolfgoncharov.balance.structure.Balance;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * Created by alexwolf on 02.02.16.
  */
+
+@Service
 public class BalanceServiceImpl implements  BalanceService {
 
     private static BalanceDAO balanceDAO = new BalanceDAOImpl();

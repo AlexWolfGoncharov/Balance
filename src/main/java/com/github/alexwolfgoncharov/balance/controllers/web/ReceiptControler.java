@@ -13,13 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -31,7 +29,7 @@ public class ReceiptControler {
 
     private static ServiceFactory serviceFactory = ServiceFactory.getFactory();
 
-
+    
     private static ReceiptOperDeptService receiptOperDeptService = ServiceFactory.getFactory().getReceiptOperDeptService();
 
     private static ReceiptOperContractService receiptOperContractService = ServiceFactory.getFactory().getReceiptOperContractService();
@@ -79,7 +77,7 @@ public class ReceiptControler {
         newOperContract.setTime(operationsContracts.getTime());
 
 
-        log.info(newOperContract.toString());
+//        log.info(newOperContract.toString());
 
 //        if (result.hasErrors()) {
 //
@@ -132,7 +130,7 @@ public class ReceiptControler {
         if(parametrs.containsKey("datestart")) {
             typeOfReturn =2;
 
-            log.info((String) parametrs.get("datestart")[0]);
+//            log.info((String) parametrs.get("datestart")[0]);
 
            Date st = new Date();
             try {
@@ -199,17 +197,17 @@ public class ReceiptControler {
         }
 
 
-        Double summ = 0D;
+        BigDecimal summ = new BigDecimal(0);
 
-        Double ndc = 0D;
+        BigDecimal ndc = new BigDecimal(0);
 
         for (ReceiptOperationsContracts operationsContracts : receiptOperationsContractsList){
 
 
-            summ += operationsContracts.getSumma();
+            summ = summ.add(operationsContracts.getSumma()) ;
 
             if (operationsContracts.getNdc() != null)
-                ndc += operationsContracts.getNdc();
+                ndc = ndc.add(operationsContracts.getNdc());
 
         }
 
@@ -292,7 +290,7 @@ public class ReceiptControler {
         List<ReceiptOperationsDepartments> operationsDepartmentses = operationsContracts.getReceiptOperationsDepartmentList();
 
         receiptOperContractService.delete(operationsContracts);
-        log.info(requestBody.getHeader("referer"));
+//        log.info(requestBody.getHeader("referer"));
 
 
         return "redirect:"+requestBody.getHeader("referer");
@@ -311,10 +309,10 @@ public class ReceiptControler {
     public String addOperDep(@ModelAttribute("operdep")ReceiptOperationsDepartments operationsDepartments,
                              BindingResult result, Map<String, Object> map) {
 //        Исключаем доваление пустых записей с незаполненной суммой
-        if (operationsDepartments.getSumma() != 0)
+        if (!operationsDepartments.getSumma().equals(0))
                  receiptOperDeptService.add(operationsDepartments);
 
-        ReceiptOperationsContracts operationsContracts = receiptOperContractService.getById(operationsDepartments.getReceptOpContrId());
+        ReceiptOperationsContracts operationsContracts = receiptOperContractService.getById(operationsDepartments.getReceptOpContrId().getId());
 
         map.put("opercontract", operationsContracts);
 
@@ -322,7 +320,7 @@ public class ReceiptControler {
         map.put("contractList", balanceService.getAll(new  Contracts()));
 
 
-        return "redirect:/view/opercontract/"+operationsDepartments.getReceptOpContrId();
+        return "redirect:/view/opercontract/"+operationsDepartments.getReceptOpContrId().getId();
 
 
 
@@ -345,12 +343,14 @@ public class ReceiptControler {
 
 
 
-        return "redirect:/view/opercontract/"+fordel.getReceptOpContrId();
+        return "redirect:/view/opercontract/"+fordel.getReceptOpContrId().getId();
     }
 
 
 
 
+
+//    Getting all ReceiptOperationsDepartments  with filter
 
     @RequestMapping("/alloperdept")
     public String listRecieptDepartments(Map<String, Object> map, HttpServletRequest  requestBody) {
@@ -415,14 +415,25 @@ public class ReceiptControler {
         }
 
         if(parametrs.containsKey("contractId")){
-            typeOfReturn = 3;
+            typeOfReturn = 4;
             contracts = (Contracts) balanceService.getById(Integer.parseInt(parametrs.get("contractId")[0]), new Contracts());
+            log.info(contracts.toString());
         }
 
 
         if(parametrs.containsKey("departmentId")){
-            typeOfReturn = 4;
+//            if have date and departmentId
+            if (typeOfReturn == 2) {
+                typeOfReturn = 3;
+//             if have contractID and departmentId
+            } else if (typeOfReturn == 4) {
+                typeOfReturn = 5;
+//             if have only departmentId
+            } else {
+                typeOfReturn = 6;
+            }
             departments = (Departments) balanceService.getById(Integer.parseInt(parametrs.get("departmentId")[0]), new Departments());
+            log.info(departments.toString());
         }
 
 
@@ -461,46 +472,134 @@ public class ReceiptControler {
                 break;
             case 4:
                 receiptOperationsDepartmentses =  receiptOperDeptService.getAllByContract(contracts);
-                map.put("type", "Для контракта №" + contracts.getContractNumber() + " от " + contracts.getStartDate()
-                        + "<br/>Контрагент: " + contracts.getContrAgentId().getName());
+                map.put("contract", contracts);
+//                map.put("type", "Для контракта №" + contracts.getContractNumber() + " от " + contracts.getStartDate()
+//                        + "<br/>Контрагент: " + contracts.getContrAgentId().getName());
                 map.put("tab","contract");
                 break;
             case 5:
                 receiptOperationsDepartmentses =  receiptOperDeptService.getAllByContractAndDep(contracts, departments);
 //                TO-DO
-//                 map.put("tab","??");
+                map.put("contract", contracts);
+                map.put("department", departments);
+                 map.put("tab","contract");
 //                 map.put("type", "??");
                 break;
             case 6:
                 receiptOperationsDepartmentses =  receiptOperDeptService.getAllbyDept(departments);
+                map.put("department", departments);
 //                TO-DO
-//                 map.put("tab","??");
+                 map.put("tab","department");
 //                 map.put("type", "??");
                 break;
 
         }
 
 
-        Double summ = 0D;
+        BigDecimal summ = new BigDecimal(0);
 
-        Double ndc = 0D;
-
-        for (ReceiptOperationsDepartments receiptOperationsDepartments : receiptOperationsDepartmentses){
+        BigDecimal ndc = new BigDecimal(0);
 
 
-            summ += receiptOperationsDepartments.getSumma();
-            ndc += receiptOperationsDepartments.getNdc();
+        Map < Departments, ItorOperDepartments> itorOperDepartmentsMap =  new HashMap<>();
+        Map <Contracts, ItorOperDepartments> itorOperContractMap = new HashMap<>();
+        int count = 0;
+
+
+         for (ReceiptOperationsDepartments receiptOperationsDepartments : receiptOperationsDepartmentses){
+            ItorOperDepartments itorOperForDepartments =  new ItorOperDepartments();
+             itorOperForDepartments.setNdc(new BigDecimal(0));
+             itorOperForDepartments.setSumma(new BigDecimal(0));
+             ItorOperDepartments itorOperForContracts =  new ItorOperDepartments();
+             itorOperForContracts.setNdc(new BigDecimal(0));
+             itorOperForContracts.setSumma(new BigDecimal(0));
+
+
+            if (itorOperDepartmentsMap.containsKey(receiptOperationsDepartments.getDepartmentId())){
+                itorOperForDepartments = itorOperDepartmentsMap.
+                        get(receiptOperationsDepartments.getDepartmentId());
+            }
+
+             if (itorOperContractMap.containsKey(receiptOperationsDepartments.getReceptOpContrId().getContractId())){
+
+                 itorOperForContracts = itorOperContractMap.
+                         get(receiptOperationsDepartments.
+                                 getReceptOpContrId().getContractId());
+             }
+
+             itorOperForDepartments.setDepartments(receiptOperationsDepartments.getDepartmentId());
+             itorOperForDepartments.setContracts(receiptOperationsDepartments.getReceptOpContrId().getContractId());
+             itorOperForDepartments.setCountOfOperations(itorOperForDepartments.getCountOfOperations()+1);
+             itorOperForDepartments.setSumma(itorOperForDepartments.getSumma().add(receiptOperationsDepartments.getSumma()));
+
+
+
+             itorOperForContracts.setDepartments(receiptOperationsDepartments.getDepartmentId());
+             itorOperForContracts.setContracts(receiptOperationsDepartments.getReceptOpContrId().getContractId());
+             itorOperForContracts.setCountOfOperations(itorOperForContracts.getCountOfOperations()+1);
+             itorOperForContracts.setSumma(itorOperForContracts.getSumma().add(receiptOperationsDepartments.getSumma()));
+                 if(receiptOperationsDepartments.getNdc()!= null) {
+                     itorOperForDepartments.setNdc(itorOperForDepartments.getNdc()
+                                                                         .add(receiptOperationsDepartments.getNdc()));
+                     ndc = ndc.add(receiptOperationsDepartments.getNdc());
+                     itorOperForContracts.setNdc(itorOperForContracts.getNdc()
+                                                                    .add(receiptOperationsDepartments.getNdc()));
+                 }
+
+
+
+
+             summ = summ.add(receiptOperationsDepartments.getSumma());
+
+             count++;
+
+             itorOperDepartmentsMap.put(receiptOperationsDepartments.getDepartmentId(),itorOperForDepartments);
+             itorOperContractMap.put(receiptOperationsDepartments.getReceptOpContrId().getContractId(), itorOperForContracts);
 
         }
 
-        map.put("operDepartmentList", receiptOperationsDepartmentses);
-        map.put("summa", summ.floatValue());
-        map.put("ndc", ndc.floatValue());
-        map.put("contraсtsList", balanceService.getAll(new Contracts()));
-        map.put("departmentsList", balanceService.getAll(new Departments()));
 
-        if (!map.containsKey("tab"))
-            map.put("tab","date");
+
+        List<ItorOperDepartments> forDepartments = new ArrayList<ItorOperDepartments>( itorOperDepartmentsMap.values());
+        List<ItorOperDepartments> forContracts = new ArrayList<ItorOperDepartments>( itorOperContractMap.values());
+
+
+//        switch (typeOfReturn){
+//            case 4:
+//                map.put("itogForContracts", forDepartments);
+//                break;
+//            case 6:
+//                map.put("itogForDepartments", forContracts);
+//
+//                break;
+//
+//        }
+
+        if (typeOfReturn == 4)
+            map.put("itogForContracts", forDepartments);
+
+        if (typeOfReturn == 6)
+            map.put("itogForDepartments", forContracts);
+
+
+
+        List<Balance> contractsList =  balanceService.getAll(new Contracts());
+        List<Balance> departmentsList =  balanceService.getAll(new Departments());
+
+        log.info(forContracts.toString());
+        log.info(forDepartments.toString());
+        log.info(contractsList.toString());
+        log.info(departmentsList.toString());
+
+
+        map.put("summa", summ);
+        map.put("ndc", ndc);
+        map.put("count", count);
+        map.put("contraсtsList", contractsList);
+        map.put("departmentsList", departmentsList);
+        map.put("operDepartmentList", receiptOperationsDepartmentses);
+//        if (!map.containsKey("tab"))
+//            map.put("tab","date");
         return "alloperdept";
     }
 

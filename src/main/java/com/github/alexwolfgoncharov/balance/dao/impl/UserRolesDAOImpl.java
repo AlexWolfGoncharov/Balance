@@ -3,6 +3,7 @@ package com.github.alexwolfgoncharov.balance.dao.impl;
 import com.github.alexwolfgoncharov.balance.dao.UserRolesDAO;
 import com.github.alexwolfgoncharov.balance.security.UserRoles;
 import com.github.alexwolfgoncharov.balance.util.HibernateMyUtil;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
@@ -18,6 +19,7 @@ public class UserRolesDAOImpl implements UserRolesDAO {
             .getName());
 
     @Override
+    @Transactional
     public void add(UserRoles roles) {
        try{ HibernateMyUtil.getSessionFactory().getCurrentSession()
                 .beginTransaction();
@@ -34,6 +36,7 @@ public class UserRolesDAOImpl implements UserRolesDAO {
     }
 
     @Override
+    @Transactional
     public Set<UserRoles> getAll() {
 
         Set<UserRoles> userRolesSet = new HashSet<UserRoles>();
@@ -62,6 +65,7 @@ public class UserRolesDAOImpl implements UserRolesDAO {
     }
 
     @Override
+    @Transactional
     public void delete(UserRoles roles) {
 
         try {
@@ -82,6 +86,7 @@ public class UserRolesDAOImpl implements UserRolesDAO {
     }
 
     @Override
+    @Transactional
     public UserRoles getById(int id) {
         UserRoles contrAgents = null;
 

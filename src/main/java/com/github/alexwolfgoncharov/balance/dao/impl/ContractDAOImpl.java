@@ -7,6 +7,7 @@ import com.github.alexwolfgoncharov.balance.util.HibernateMyUtil;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -19,7 +20,7 @@ public class ContractDAOImpl implements ContractsDAO {
 
     private static final Logger log = Logger.getLogger(ContractDAOImpl.class
             .getName());
-
+    @Transactional
     public void add(Contracts contract) {
         try {
 
@@ -37,7 +38,7 @@ public class ContractDAOImpl implements ContractsDAO {
         }
 
     }
-
+    @Transactional
     public Contracts getById(int ID) {
         Contracts contracts = null;
 
@@ -59,6 +60,7 @@ public class ContractDAOImpl implements ContractsDAO {
         return contracts;
     }
 
+    @Transactional
     public List<Contracts> getAll() {
 
 
@@ -82,6 +84,7 @@ public class ContractDAOImpl implements ContractsDAO {
         return contractsList;
     }
 
+    @Transactional
     @Override
     public List<Contracts> getAllbyContAgent(ContrAgents contrAgents) {
         List<Contracts> contractsList = null;
@@ -105,11 +108,13 @@ public class ContractDAOImpl implements ContractsDAO {
         return contractsList;
     }
 
+    @Transactional
     public void modify(Contracts contract) {
         add(contract);
 
     }
 
+    @Transactional
     public void delete(Contracts contract) {
 
 

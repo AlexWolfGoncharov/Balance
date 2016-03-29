@@ -1,7 +1,7 @@
 package com.github.alexwolfgoncharov.balance.config;
 
 
-import com.github.alexwolfgoncharov.balance.services.UserDetailsServiceImpl;
+import com.github.alexwolfgoncharov.balance.services.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -41,6 +41,44 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
 		return new UserDetailsServiceImpl();
 	}
 
+
+	@Bean(name = "BalanceService")
+	public BalanceService getBalanceService(){
+		return new BalanceServiceImpl();
+	}
+
+	@Bean (name = "receiptOperContractService")
+	public ReceiptOperContractService receiptOperContractService(){
+		return new ReceiptOperContractServiceImpl();
+	}
+
+	@Bean (name = "receiptOperDeptService")
+	public  ReceiptOperDeptService receiptOperDeptService(){
+		return new ReceiptOperDeptServiceImpl();
+	}
+
+	@Bean (name = "userRolesService")
+	public UserRolesService userRolesService(){
+
+		return new UserRolesServiceImpl();
+	}
+
+	@Bean (name = "contractsService")
+	public ContractsService contractsService() {
+		return new ContractsServiceImpl();
+	}
+
+
+	@Bean (name ="contrAgentsService" )
+	public ContrAgentsService contrAgentsService(){
+		return  new ContrAgentsServiceImpl();
+	}
+
+	@Bean (name = "serviceFactory")
+	public ServiceFactory serviceFactory(){
+
+		return new ServiceFactory();
+	}
 
 //	@Bean
 //	public View jsonTemplate() {

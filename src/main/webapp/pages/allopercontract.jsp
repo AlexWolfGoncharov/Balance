@@ -115,7 +115,7 @@
 					<select name="contractId" class="form-control" id="contractId">
 
 						<c:forEach items="${contraсtsList}" var="contragent" varStatus="myIndex">
-							<option value="${contragent.id}" label="№${contragent.contractNumber} | ${contragent.startDate} | ${contragent.description}" />
+							<option value="${contragent.id}">№${contragent.contractNumber} | ${contragent.startDate} | ${contragent.description}</option>
 						</c:forEach>
 
 
@@ -176,15 +176,23 @@
 
 		<c:if test="${summa != 0}">
 
-			<div >
+			<%--<div class="panel panel-success bg-success">--%>
+				<%--<div class="panel-body">--%>
 
-				<h2 class="text-success">Итого: <fmt:formatNumber value="${summa}"
-																  type="currency"
-																  currencyCode="UAH"/> НДС:<fmt:formatNumber value="${ndc}"
-																												type="currency"
-																											 	currencyCode="UAH"/></h2>
 
-			</div>
+						<h2 class="text-success">Итого: <fmt:formatNumber value="${summa}"
+																	 type="currency"
+																	 currencyCode="UAH"/></h2>
+						<h2 class="text-danger">НДС: <fmt:formatNumber value="${ndc}"
+																   type="currency"
+																   currencyCode="UAH"/></h2>
+
+				<%--</div>--%>
+			<%--</div>--%>
+
+
+
+
 		</c:if>
 
 		<table class="table table-view">

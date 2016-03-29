@@ -7,6 +7,7 @@ import com.github.alexwolfgoncharov.balance.util.HibernateMyUtil;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -21,7 +22,7 @@ public class UserDAOImpl implements UserDAO {
     private static final Logger log = Logger.getLogger(UserDAOImpl.class
             .getName());
 
-
+    @Transactional
     @Override
     public void add(User user) {
         if(user.getCreateTime() == null){
@@ -65,6 +66,8 @@ public class UserDAOImpl implements UserDAO {
 
     }
 
+
+    @Transactional
     @Override
     public User modify(User user) {
         User user2 = null;
@@ -93,6 +96,7 @@ public class UserDAOImpl implements UserDAO {
         return user2;
     }
 
+    @Transactional
     @Override
     public User getByID(int ID) {
         User user = null;
@@ -115,6 +119,7 @@ public class UserDAOImpl implements UserDAO {
         return user;
     }
 
+    @Transactional
     @Override
     public User getByLogin(String login) {
         User user = null;
@@ -138,6 +143,7 @@ public class UserDAOImpl implements UserDAO {
         return user;
     }
 
+    @Transactional
     @Override
     public List<User> getAll() {
 
@@ -165,11 +171,13 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     @Deprecated
+    @Transactional
     public List<User> getAllByRole(UserRoles role) {
         return null;
     }
 
     @Override
+    @Transactional
     public void delete(User user) {
 
 
@@ -197,6 +205,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
+    @Transactional
     public void block(User user) {
 
         user.setAccess(false);
@@ -205,7 +214,7 @@ public class UserDAOImpl implements UserDAO {
 
     }
 
-
+    @Transactional
     public int getNextId() throws SQLException {
 
         int ret = 0;

@@ -5,6 +5,7 @@ import com.github.alexwolfgoncharov.balance.structure.ContrAgents;
 import com.github.alexwolfgoncharov.balance.util.HibernateMyUtil;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -17,6 +18,8 @@ public class ContrAgentsDAOImpl implements ContrAgentsDAO {
     private static final Logger log = Logger.getLogger(ContrAgentsDAOImpl.class
             .getName());
 
+
+    @Transactional
     public void add(ContrAgents contract) {
         try {
 
@@ -35,6 +38,7 @@ public class ContrAgentsDAOImpl implements ContrAgentsDAO {
 
     }
 
+    @Transactional
     public ContrAgents getById(int ID) {
         ContrAgents contrAgents = null;
 
@@ -56,6 +60,8 @@ public class ContrAgentsDAOImpl implements ContrAgentsDAO {
         return contrAgents;
     }
 
+
+    @Transactional
     public List<ContrAgents> getAll() {
 
 
@@ -79,11 +85,13 @@ public class ContrAgentsDAOImpl implements ContrAgentsDAO {
         return contractsList;
     }
 
+    @Transactional
     public void modify(ContrAgents contract) {
         add(contract);
 
     }
 
+    @Transactional
     public void delete(ContrAgents contract) {
 
         Session session = null;
