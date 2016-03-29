@@ -18,7 +18,7 @@ public class UserServiceImpl implements UserService {
 	private static final Logger log = Logger.getLogger(UserServiceImpl.class
 			.getName());
 
-//	@Autowired
+
 	private static UserDAO userDAO = new UserDAOImpl();
 	
 	 @Transactional

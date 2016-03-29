@@ -49,21 +49,6 @@ public class UserDAOImpl implements UserDAO {
             }
         }
 
-//        try {
-//
-//            HibernateMyUtil.getSessionFactory().getCurrentSession()
-//                    .beginTransaction();
-//            HibernateMyUtil.getSessionFactory().getCurrentSession()
-//                    .saveOrUpdate(user);
-//            HibernateMyUtil.getSessionFactory().getCurrentSession()
-//                    .getTransaction().commit();
-//
-//        } catch (Exception e) {
-//            HibernateMyUtil.getSessionFactory().getCurrentSession()
-//                    .getTransaction().rollback();
-//            log.severe(e.getMessage());
-//        }
-
     }
 
 

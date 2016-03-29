@@ -57,7 +57,6 @@ public class ReceiptControler {
 
         Contracts currentContr = (Contracts) balanceService.getById(operationsContracts.getContractId().getId(), new Contracts());
 
-//        log.info(operationsContracts.getTime().toString());
 
         ReceiptOperationsContracts newOperContract = null;
 
@@ -77,19 +76,11 @@ public class ReceiptControler {
         newOperContract.setTime(operationsContracts.getTime());
 
 
-//        log.info(newOperContract.toString());
-
-//        if (result.hasErrors()) {
-//
-//            map.put("error","Что-то пошло не так");
-//            return "redirect:/addbalance";
-//        }
-
       long id =   receiptOperContractService.add(newOperContract);
 
 
         return "redirect:/view/opercontract/"+id;
-//        return "redirect:/allopercontract";
+
     }
 
 
@@ -130,7 +121,6 @@ public class ReceiptControler {
         if(parametrs.containsKey("datestart")) {
             typeOfReturn =2;
 
-//            log.info((String) parametrs.get("datestart")[0]);
 
            Date st = new Date();
             try {
@@ -290,8 +280,6 @@ public class ReceiptControler {
         List<ReceiptOperationsDepartments> operationsDepartmentses = operationsContracts.getReceiptOperationsDepartmentList();
 
         receiptOperContractService.delete(operationsContracts);
-//        log.info(requestBody.getHeader("referer"));
-
 
         return "redirect:"+requestBody.getHeader("referer");
     }
@@ -473,17 +461,14 @@ public class ReceiptControler {
             case 4:
                 receiptOperationsDepartmentses =  receiptOperDeptService.getAllByContract(contracts);
                 map.put("contract", contracts);
-//                map.put("type", "Для контракта №" + contracts.getContractNumber() + " от " + contracts.getStartDate()
-//                        + "<br/>Контрагент: " + contracts.getContrAgentId().getName());
                 map.put("tab","contract");
                 break;
             case 5:
                 receiptOperationsDepartmentses =  receiptOperDeptService.getAllByContractAndDep(contracts, departments);
-//                TO-DO
+
                 map.put("contract", contracts);
                 map.put("department", departments);
                  map.put("tab","contract");
-//                 map.put("type", "??");
                 break;
             case 6:
                 receiptOperationsDepartmentses =  receiptOperDeptService.getAllbyDept(departments);
@@ -564,16 +549,6 @@ public class ReceiptControler {
         List<ItorOperDepartments> forContracts = new ArrayList<ItorOperDepartments>( itorOperContractMap.values());
 
 
-//        switch (typeOfReturn){
-//            case 4:
-//                map.put("itogForContracts", forDepartments);
-//                break;
-//            case 6:
-//                map.put("itogForDepartments", forContracts);
-//
-//                break;
-//
-//        }
 
         if (typeOfReturn == 4)
             map.put("itogForContracts", forDepartments);
@@ -598,8 +573,6 @@ public class ReceiptControler {
         map.put("contraсtsList", contractsList);
         map.put("departmentsList", departmentsList);
         map.put("operDepartmentList", receiptOperationsDepartmentses);
-//        if (!map.containsKey("tab"))
-//            map.put("tab","date");
         return "alloperdept";
     }
 

@@ -95,8 +95,6 @@ public class BalanceDAOImpl implements BalanceDAO {
 
             HibernateMyUtil.getSessionFactory().getCurrentSession()
                     .beginTransaction();
-//           Object forDel = (Object) HibernateMyUtil.getSessionFactory().getCurrentSession()
-//                    .get(contract.getClass(), contract.ID);
 
             HibernateMyUtil.getSessionFactory().getCurrentSession()
                     .delete(contract);

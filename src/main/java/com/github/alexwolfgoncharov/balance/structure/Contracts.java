@@ -11,7 +11,7 @@ import java.util.List;
  * Created by alexwolf on 31.01.16.
  */
 @Entity
-@Table(name = "contracts", schema = "Balance")
+@Table(name = "contracts", schema = "Balance_demo")
 public class Contracts extends Balance{
     private int id;
     private ContrAgents contrAgentId;
@@ -84,7 +84,6 @@ public class Contracts extends Balance{
     }
 
     @OneToMany(cascade = CascadeType.ALL,  fetch = FetchType.LAZY)
-   //    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE},  fetch = FetchType.LAZY)
     @JoinColumn(name = "contract_id")
     @org.hibernate.annotations.OrderBy(clause = "ID")
     public List<ReceiptOperationsContracts> getOperationsContractses() {

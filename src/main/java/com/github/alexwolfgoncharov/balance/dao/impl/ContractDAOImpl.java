@@ -126,19 +126,7 @@ public class ContractDAOImpl implements ContractsDAO {
 
             contract = (Contracts) HibernateMyUtil.getSessionFactory().getCurrentSession()
                     .get(Contracts.class, contract.getId());
-//            List<ReceiptOperationsContracts> operationsContractsList =
-//                    HibernateMyUtil.getSessionFactory().getCurrentSession()
-//                            .createCriteria(ReceiptOperationsContracts.class)
-//                            .add(Restrictions.eq("contractId", contract))
-//                            .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
-//                            .addOrder(Order.asc("time"))
-//                            .list();
-//
-//            for (ReceiptOperationsContracts operationsContracts : operationsContractsList){
-//
-//                HibernateMyUtil.getSessionFactory().getCurrentSession()
-//                        .delete(operationsContracts);
-//            }
+
 
             HibernateMyUtil.getSessionFactory().getCurrentSession()
                     .delete(contract);

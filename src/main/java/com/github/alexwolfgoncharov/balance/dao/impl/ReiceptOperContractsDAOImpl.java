@@ -129,7 +129,6 @@ public class ReiceptOperContractsDAOImpl implements ReceiptOperContractsDAO {
             ReceiptOperationsContracts  operationsContracts =   (ReceiptOperationsContracts)  session.get(ReceiptOperationsContracts.class, contract.getId());
 
                 session.delete(operationsContracts);
-    //            HibernateMyUtil.getSessionFactory().getCurrentSession()
                 session.getTransaction().commit();
 
         } catch (Exception e) {

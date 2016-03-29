@@ -11,7 +11,7 @@ import java.util.List;
  * Created by alexwolf on 31.01.16.
  */
 @Entity
-@Table(name = "receipt_operations_contracts", schema = "Balance")
+@Table(name = "receipt_operations_contracts", schema = "Balance_demo")
 public class ReceiptOperationsContracts {
     private long id;
     private Timestamp time;

@@ -230,8 +230,6 @@ public class MainController {
 
 
     @RequestMapping(value = "/addContract", method = RequestMethod.POST)
-//    public String addContract(@Valid @ModelAttribute("contract") Contracts contact, @PathParam("contrAgentId") Integer contrAgentId,
-//                              BindingResult result) {
 
     public String addContract(@Valid @ModelAttribute("contract") Contracts contact,
                               BindingResult result, Map<String, Object> map) {
@@ -254,9 +252,6 @@ public class MainController {
         log.info(newContr.toString());
 
 
-
-//        ContrAgents contrAgent = (ContrAgents) balanceService.getById(contrAgentId, new ContrAgents());
-//        contact.setContrAgentId(contrAgent);
         balanceService.add(newContr);
 
 
@@ -312,10 +307,6 @@ public class MainController {
         newContr.setContrAgentId(contrAgents);
         newContr.setStartDate(contact.getStartDate());
 
-
-
-//        ContrAgents contrAgent = (ContrAgents) balanceService.getById(contrAgentId, new ContrAgents());
-//        contact.setContrAgentId(contrAgent);
 
         log.info(contact.toString());
 

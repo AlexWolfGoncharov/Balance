@@ -11,7 +11,7 @@ import java.sql.Timestamp;
  * Created by alexwolf on 03.02.16.
  */
 @Entity
-@Table(name = "receipt_operations_departments", schema = "Balance")
+@Table(name = "receipt_operations_departments", schema = "Balance_demo")
 public class ReceiptOperationsDepartments {
     private long id;
     private Timestamp time;
@@ -19,7 +19,6 @@ public class ReceiptOperationsDepartments {
     private BigDecimal summa;
     private BigDecimal ndc;
     private String description;
-//    private long receptOpContrId;
     private ReceiptOperationsContracts receptOpContrId;
 
     @Id
@@ -43,8 +42,6 @@ public class ReceiptOperationsDepartments {
         this.time = time;
     }
 
-//    @Basic
-//    @Column(name = "department_id", nullable = false)
     @ManyToOne
     @JoinColumn(name = "department_id")
     public Departments getDepartmentId() {
@@ -85,8 +82,7 @@ public class ReceiptOperationsDepartments {
         this.description = description;
     }
 
-//    @Basic
-//    @Column(name = "recept_op_contr_id")
+
     @ManyToOne
     @JoinColumn(name = "recept_op_contr_id")
     @Fetch(FetchMode.SELECT)

@@ -9,7 +9,7 @@ import java.util.List;
  * Created by alexwolf on 31.01.16.
  */
 @Entity
-@Table(name = "contr_agents", schema = "Balance")
+@Table(name = "contr_agents", schema = "Balance_demo")
 public class ContrAgents extends Balance {
     private int id;
     private String name;
@@ -50,8 +50,7 @@ public class ContrAgents extends Balance {
 
 
     @OneToMany(cascade = CascadeType.ALL,  fetch = FetchType.LAZY)
-//    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "contr_agent_id")
+     @JoinColumn(name = "contr_agent_id")
     @org.hibernate.annotations.OrderBy(clause = "ID")
     public List<Contracts> getAllContracts() {
         return allContracts;

@@ -246,20 +246,6 @@ public class ReiceptOperDeptDAOImpl implements ReceiptOperDeptDAO {
             session  = HibernateMyUtil.getSessionFactory().getCurrentSession();
             session.beginTransaction();
 
-//            session.createCriteria(ReceiptOperationsContracts.class)
-//                    .add(Restrictions.eq("contractId", contracts.getId())).list();
-
-//            String query = "SELECT ID FROM receipt_operations_contracts WHERE contract_id = "
-//                    + contracts.getId();
-//            System.out.println(query);
-//           List<BigInteger> idList =( List<BigInteger>) session.createSQLQuery(query).list();
-//            List<Long> idLong =   new ArrayList<>();
-//            for (BigInteger integer : idList){
-//
-//                idLong.add(integer.longValue());
-//            }
-//
-
 
 
 
@@ -272,13 +258,7 @@ public class ReiceptOperDeptDAOImpl implements ReceiptOperDeptDAO {
             criteria.addOrder(Order.asc("time"));
 
             receiptOperationsDepartmentses = ( List<ReceiptOperationsDepartments> )criteria.list();
-//
-//            receiptOperationsDepartmentses = ( List<ReceiptOperationsDepartments> )
-//                    session.createCriteria(ReceiptOperationsDepartments.class)
-//                    .add(Restrictions.in("receptOpContrId", idLong ))
-//                    .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
-//                    .addOrder(Order.asc("time"))
-//                    .list();
+
             session.getTransaction().commit();
         } catch (Exception e) {
             session.getTransaction().rollback();
@@ -315,25 +295,6 @@ public class ReiceptOperDeptDAOImpl implements ReceiptOperDeptDAO {
             criteria.addOrder(Order.asc("time"));
 
             receiptOperationsDepartmentses = ( List<ReceiptOperationsDepartments> )criteria.list();
-
-//
-//            String query = "SELECT ID FROM receipt_operations_contracts WHERE contract_id = "
-//                    + contracts.getId();
-//            System.out.println(query);
-//            List<BigInteger> idList =( List<BigInteger>) session.createSQLQuery(query).list();
-//            List<Long> idLong =   new ArrayList<>();
-//            for (BigInteger integer : idList){
-//
-//                idLong.add(integer.longValue());
-//            }
-//
-//            receiptOperationsDepartmentses = ( List<ReceiptOperationsDepartments> )
-//                    session.createCriteria(ReceiptOperationsDepartments.class)
-//                            .add(Restrictions.in("receptOpContrId", idLong))
-//                            .add(Restrictions.eq("departmentId", departments))
-//                            .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
-//                            .addOrder(Order.asc("time"))
-//                            .list();
             session.getTransaction().commit();
         } catch (Exception e) {
             session.getTransaction().rollback();
